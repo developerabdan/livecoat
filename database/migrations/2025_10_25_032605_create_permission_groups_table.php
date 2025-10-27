@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary()->unique();
             $table->string('name')->unique();
             $table->string('slug')->unique();
+            $table->string('icon')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
         });

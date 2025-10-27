@@ -11,11 +11,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'auth','as' => 'auth.'],function(){
+Route::group(['prefix' => 'auth','as' => 'auth.','middleware' => 'guest'],function(){
     Route::get('/login',Login::class)->name('login');
 });
 
-Route::group(['prefix' => 'app','as' => 'app.'],function(){
+Route::group(['prefix' => 'app','as' => 'app.', 'middleware' => 'auth'],function(){
     Route::get('/dashboard',Dashboard::class)->name('dashboard');
 
     Route::group(['prefix' => 'settings','as' => 'settings.'],function(){

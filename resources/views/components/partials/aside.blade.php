@@ -15,7 +15,7 @@
                 </div>
             </a>
         </header>
-        <section class="scrollbar">
+        <section class="scrollbar" wire:ignore>
             @foreach ($menu as $groupIndex => $group)
                 <div role="group" aria-labelledby="group-label-content-{{ $groupIndex }}">
                     <h3 id="group-label-content-{{ $groupIndex }}">{{ $group['group'] }}</h3>

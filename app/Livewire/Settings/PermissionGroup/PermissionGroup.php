@@ -39,6 +39,8 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
                                 TextInput::make('name')
                                         ->placeholder(__('Name'))
                                         ->required(),
+                                TextInput::make('icon')
+                                        ->placeholder(__('Icon')),
                                 TextInput::make('description')
                                         ->placeholder(__('Description')),
                             ])
@@ -47,6 +49,7 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
                                 ModelsPermissionGroup::query()->create([
                                     'name' => $data['name'],
                                     'slug' => Str::slug($data['name']),
+                                    'icon' => $data['icon'],
                                     'description' => $data['description'],
                                 ]);
                             })
@@ -54,6 +57,7 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
             ->columns([
                 TextColumn::make('name')
                         ->searchable(),
+                TextColumn::make('icon'),
                 TextColumn::make('description'),
             ])
             ->filters([

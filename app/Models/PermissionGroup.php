@@ -12,6 +12,11 @@ class PermissionGroup extends Model
     protected $fillable = [
         "name",
         "slug",
+        "icon",
         "description"
     ];
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class,'permission_group_id');
+    }
 }
