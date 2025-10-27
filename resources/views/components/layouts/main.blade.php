@@ -16,6 +16,11 @@
                         'active' => request()->routeIs('app.settings.*'),
                         'sub' => [
                             [
+                                'title' => __('Permission Groups'),
+                                'route' => route('app.settings.permission-group'),
+                                'active' => request()->routeIs('app.settings.permission-group')
+                            ],
+                            [
                                 'title' => __('Permissions'),
                                 'route' => route('app.settings.permission'),
                                 'active' => request()->routeIs('app.settings.permission'),

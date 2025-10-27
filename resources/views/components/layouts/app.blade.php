@@ -36,14 +36,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Blank' }} | {{ config('app.name') }}</title>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+    @filamentStyles
     @vite('resources/css/app.css')
-    <link rel="stylesheet" href="{{ asset('assets/css/basecoat.min.css') }}">
     <script src="{{ asset('assets/js/basecoat.min.js') }}" defer></script>
     <script src="{{ asset('assets/js/sidebar.min.js') }}" defer></script>
 </head>
 
-<body>
+<body class="antialiased">
     {{ $slot }}
+    @livewire('notifications')
+    @filamentScripts
+    @vite('resources/js/app.js')
 </body>
 
 </html>
