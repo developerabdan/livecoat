@@ -6,13 +6,17 @@ use App\Models\PermissionGroup as ModelsPermissionGroup;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -33,12 +37,18 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
                 CreateAction::make()
                             ->schema([
                                 TextInput::make('name')
+                                        ->placeholder(__('Name'))
                                         ->required(),
-                                TextInput::make('description'),
+                                TextInput::make('description')
+                                        ->placeholder(__('Description')),
                             ])
-                            ->action(function (ModelsPermissionGroup $record, array $data): void {
-                                $record->fill($data);
-                                $record->save();
+                            ->successNotificationTitle(__('Permission Group Created'))
+                            ->action(function (array $data): void {
+                                ModelsPermissionGroup::query()->create([
+                                    'name' => $data['name'],
+                                    'slug' => Str::slug($data['name']),
+                                    'description' => $data['description'],
+                                ]);
                             })
             ])
             ->columns([
@@ -50,7 +60,27 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
                 // ...
             ])
             ->recordActions([
-                // ...
-            ]);
+                EditAction::make()
+                            ->schema([
+                                TextInput::make('name')
+                                        ->placeholder(__('Name'))
+                                        ->required(),
+                                TextInput::make('description')
+                                        ->placeholder(__('Description')),
+                            ])
+                            ->successNotificationTitle(__('Permission Group Updated'))
+                            ->action(function (array $data,$record): void {
+                                $record->update([
+                                    'name' => $data['name'],
+                                    'slug' => Str::slug($data['name']),
+                                    'description' => $data['description'],
+                                ]);
+                            }),
+                DeleteAction::make()
+                            ->successNotificationTitle(__('Permission Group Deleted'))
+                            ->action(function (array $data,$record): void {
+                                $record->delete();
+                            })
+            ], position: RecordActionsPosition::BeforeColumns);
     }
 }

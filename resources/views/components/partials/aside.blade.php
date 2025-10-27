@@ -1,7 +1,7 @@
 @props(['menu' => []])
 
 <aside class="sidebar" data-side="left" aria-hidden="false">
-    <nav aria-label="Sidebar navigation">
+    <nav aria-label="Sidebar navigation" style="z-index:35 !important;">
         <header>
 
             <a href="/" class="btn-ghost p-2 h-12 w-full justify-start">

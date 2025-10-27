@@ -30,4 +30,16 @@
 /* Required by widgets */
 @import '../../vendor/filament/widgets/resources/css/index.css';
 
+@import "basecoat-css";
+
 @variant dark (&:where(.dark, .dark *));
+
+.fi-bg-color-400 {
+    background-color: var(--color-primary);
+}
+.fi-text-color-900 {
+    color: var(--color-primary-foreground);
+}
+.fi-text-color-700 {
+    color: var(--color-primary);
+}
