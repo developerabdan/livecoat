@@ -8,7 +8,7 @@
                     <img src="{{ asset('logo-base.png') }}" alt="Logo">
                 </div>
                 <div class="grid flex-1 text-left text-sm leading-tight">
-                    <span class="truncate font-medium">Livewire Basecoat</span>
+                    <span class="truncate font-medium">{{ config('app.name') }}</span>
                     <span class="truncate text-xs">v1.0.0</span>
                 </div>
             </a>
@@ -19,30 +19,14 @@
 
                 <ul>
                     <li>
-                        <a wire:navigate href="{{ route('app.dashboard') }}">
+                        <a @class(['bg-gray-50/5 font-medium' => request()->routeIs('app.dashboard')]) wire:navigate href="{{ route('app.dashboard') }}">
                             <x-lucide-home />
                             <span>{{ __('Dashboard') }}</span>
                         </a>
                     </li>
 
                     <li>
-                        <a href="#">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M12 8V4H8" />
-                                <rect width="16" height="12" x="4" y="8" rx="2" />
-                                <path d="M2 14h2" />
-                                <path d="M20 14h2" />
-                                <path d="M15 13v2" />
-                                <path d="M9 13v2" />
-                            </svg>
-                            <span>{{ __('Models') }}</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <details id="submenu-content-1-3">
+                        <details id="submenu-content-1-3" {{ request()->routeIs('app.settings.permission') ? 'open' : '' }}>
                             <summary aria-controls="submenu-content-1-3-content">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -55,7 +39,7 @@
                             </summary>
                             <ul id="submenu-content-1-3-content">
                                 <li>
-                                    <a wire:navigate href="{{ route('app.settings.permission') }}">
+                                    <a wire:navigate href="{{ route('app.settings.permission') }}"  wire:current="bg-gray-50/5">
                                         <span>{{ __('Permissions') }}</span>
                                     </a>
                                 </li>
