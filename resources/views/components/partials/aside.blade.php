@@ -1,3 +1,5 @@
+@props(['menu' => []])
+
 <aside class="sidebar" data-side="left" aria-hidden="false">
     <nav aria-label="Sidebar navigation">
         <header>
@@ -14,40 +16,42 @@
             </a>
         </header>
         <section class="scrollbar">
-            <div role="group" aria-labelledby="group-label-content-1">
-                <h3 id="group-label-content-1">{{ __('General') }}</h3>
+            @foreach ($menu as $groupIndex => $group)
+                <div role="group" aria-labelledby="group-label-content-{{ $groupIndex }}">
+                    <h3 id="group-label-content-{{ $groupIndex }}">{{ $group['group'] }}</h3>
 
-                <ul>
-                    <li>
-                        <a @class(['bg-gray-50/5 font-medium' => request()->routeIs('app.dashboard')]) wire:navigate href="{{ route('app.dashboard') }}">
-                            <x-lucide-home />
-                            <span>{{ __('Dashboard') }}</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <details id="submenu-content-1-3" {{ request()->routeIs('app.settings.permission') ? 'open' : '' }}>
-                            <summary aria-controls="submenu-content-1-3-content">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path
-                                        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                </svg>
-                                {{ __('Settings') }}
-                            </summary>
-                            <ul id="submenu-content-1-3-content">
-                                <li>
-                                    <a wire:navigate href="{{ route('app.settings.permission') }}"  wire:current="bg-gray-50/5">
-                                        <span>{{ __('Permissions') }}</span>
+                    <ul>
+                        @foreach ($group['items'] as $itemIndex => $item)
+                            <li>
+                                @if (isset($item['sub']) && count($item['sub']) > 0)
+                                    {{-- Menu item with submenu --}}
+                                    <details id="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}" {{ $item['active'] ?? false ? 'open' : '' }}>
+                                        <summary aria-controls="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}-content">
+                                            <x-dynamic-component :component="$item['icon']" />
+                                            {{ $item['title'] }}
+                                        </summary>
+                                        <ul id="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}-content">
+                                            @foreach ($item['sub'] as $subItem)
+                                                <li>
+                                                    <a wire:navigate href="{{ $subItem['route'] }}" @class(['bg-gray-50/5 font-medium' => $subItem['active'] ?? false])>
+                                                        <span>{{ $subItem['title'] }}</span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </details>
+                                @else
+                                    {{-- Regular menu item --}}
+                                    <a @class(['bg-gray-50/5 font-medium' => $item['active'] ?? false]) wire:navigate href="{{ $item['route'] }}">
+                                        <x-dynamic-component :component="$item['icon']" />
+                                        <span>{{ $item['title'] }}</span>
                                     </a>
-                                </li>
-                            </ul>
-                        </details>
-                    </li>
-                </ul>
-            </div>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endforeach
         </section>
     </nav>
 </aside>
