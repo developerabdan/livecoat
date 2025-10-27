@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <script data-navigate-track>
+    <script>
         (() => {
             try {
                 const stored = localStorage.getItem('themeMode');
@@ -24,6 +24,12 @@
                 apply(mode === 'dark' ? true :
                     mode === 'light' ? false :
                     !document.documentElement.classList.contains('dark'));
+            });
+
+            document.addEventListener('livewire:navigated', () => {
+                const stored = localStorage.getItem('themeMode');
+                const darkMode = stored === 'dark' || (stored === null && matchMedia('(prefers-color-scheme: dark)').matches);
+                apply(darkMode);
             });
         })();
     </script>
