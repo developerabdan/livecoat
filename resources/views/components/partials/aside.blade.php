@@ -22,35 +22,46 @@
 
                     <ul>
                         @foreach ($group['items'] as $itemIndex => $item)
-                            <li>
-                                @if (isset($item['sub']) && count($item['sub']) > 0)
-                                    {{-- Menu item with submenu --}}
-                                    <details id="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}"
-                                        {{ $item['active'] ?? false ? 'open' : '' }}>
-                                        <summary
-                                            aria-controls="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}-content">
+                            @if (!isset($item['permission']) || auth()->user()->can($item['permission']))
+                                <li>
+                                    @if (isset($item['sub']) && count($item['sub']) > 0)
+                                        {{-- Menu item with submenu --}}
+                                        @php
+                                            $visibleSubItems = collect($item['sub'])->filter(function($subItem) {
+                                                return !isset($subItem['permission']) || auth()->user()->can($subItem['permission']);
+                                            });
+                                        @endphp
+                                        @if ($visibleSubItems->isNotEmpty())
+                                            <details id="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}"
+                                                {{ $item['active'] ?? false ? 'open' : '' }}>
+                                                <summary
+                                                    aria-controls="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}-content">
+                                                    <x-dynamic-component :component="$item['icon']" />
+                                                    {{ $item['title'] }}
+                                                </summary>
+                                                <ul id="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}-content">
+                                                    @foreach ($item['sub'] as $subItem)
+                                                        @if (!isset($subItem['permission']) || auth()->user()->can($subItem['permission']))
+                                                            <li>
+                                                                <a wire:navigate href="{{ $subItem['route'] }}"
+                                                                    @class(['bg-gray-50/5 font-medium' => $subItem['active'] ?? false])>
+                                                                    <span>{{ $subItem['title'] }}</span>
+                                                                </a>
+                                                            </li>
+                                                        @endif
+                                                    @endforeach
+                                                </ul>
+                                            </details>
+                                        @endif
+                                    @else
+                                        {{-- Regular menu item --}}
+                                        <a @class(['bg-gray-50/5 font-medium' => $item['active'] ?? false]) wire:navigate href="{{ $item['route'] }}">
                                             <x-dynamic-component :component="$item['icon']" />
-                                            {{ $item['title'] }}
-                                        </summary>
-                                        <ul id="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}-content">
-                                            @foreach ($item['sub'] as $subItem)
-                                                <li>
-                                                    <a wire:navigate href="{{ $subItem['route'] }}"
-                                                        @class(['bg-gray-50/5 font-medium' => $subItem['active'] ?? false])>
-                                                        <span>{{ $subItem['title'] }}</span>
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </details>
-                                @else
-                                    {{-- Regular menu item --}}
-                                    <a @class(['bg-gray-50/5 font-medium' => $item['active'] ?? false]) wire:navigate href="{{ $item['route'] }}">
-                                        <x-dynamic-component :component="$item['icon']" />
-                                        <span>{{ $item['title'] }}</span>
-                                    </a>
-                                @endif
-                            </li>
+                                            <span>{{ $item['title'] }}</span>
+                                        </a>
+                                    @endif
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
                 </div>

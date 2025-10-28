@@ -9,6 +9,7 @@
                         'icon' => 'lucide-home',
                         'route' => route('app.dashboard'),
                         'active' => request()->routeIs('app.dashboard'),
+                        'permission' => 'View Dashboard'
                     ],
                     [
                         'title' => __('Settings'),
@@ -18,17 +19,20 @@
                             [
                                 'title' => __('Permission Groups'),
                                 'route' => route('app.settings.permission-group'),
-                                'active' => request()->routeIs('app.settings.permission-group')
+                                'active' => request()->routeIs('app.settings.permission-group'),
+                                'permission' => 'View Permission Groups'
                             ],
                             [
                                 'title' => __('Permissions'),
                                 'route' => route('app.settings.permission'),
                                 'active' => request()->routeIs('app.settings.permission'),
+                                'permission' => 'View Permissions'
                             ],
                             [
                                 'title' => __('Roles'),
                                 'route' => route('app.settings.role'),
                                 'active' => request()->routeIs('app.settings.role'),
+                                'permission' => 'View Roles'
                             ],
                         ],
                     ],

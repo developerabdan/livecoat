@@ -72,6 +72,22 @@ class Permission extends Component implements HasSchemas
         $this->dispatch('refresh-permission-group');
         $this->dispatch('close-modal',id:'addPermission');
     }
+    public function update()
+    {
+        $data = $this->form->getState();
+        ModelsPermission::query()->where('id',$this->selectedPermissionId)->update([
+            'permission_group_id' => $data['permission_group_id'],
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'guard_name' => 'web'
+        ]);
+        Notification::make()
+            ->title(__('Updated successfully'))
+            ->success()
+            ->send();
+        $this->dispatch('refresh-permission-group');
+        $this->dispatch('close-modal',id:'editPermission');
+    }
     public function delete()
     {
         ModelsPermission::query()->where('id',$this->selectedPermissionId)->delete();
@@ -90,6 +106,10 @@ class Permission extends Component implements HasSchemas
             $this->form->fill([
                 'permission_group_id' => $this->selectedGroupId
             ]);
+        }
+        if($id == 'editPermission'){
+            $this->selectedPermissionId = $data['id'];
+            $this->form->fill(ModelsPermission::query()->where('id',$this->selectedPermissionId)->first()->toArray());
         }
         if($id == 'confirmDelete'){
             $this->selectedPermissionId = $data['id'];

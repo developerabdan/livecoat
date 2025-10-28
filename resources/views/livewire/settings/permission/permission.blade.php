@@ -33,7 +33,7 @@
                             @foreach($item->permissions as $permission)
                             <div class="flex items-start gap-3 p-3 rounded-lg bg-foreground-primary">
                                 <div @class([
-                                    "w-8 h-8 rounded-md bg-primary/40 flex items-center justify-center",
+                                    "w-8 h-8 rounded-md flex items-center justify-center",
                                     "bg-primary/40" => auth()->user()->cannot($permission->name),
                                     "bg-primary" => auth()->user()->can($permission->name)
                                 ])
@@ -53,7 +53,7 @@
                                         <p class="text-xs text-gray-500">{{ $permission->description }}</p>
                                     </div>
                                     <div class="flex gap-2">
-                                        <button class="btn-sm-secondary text-xs">
+                                        <button class="btn-sm-secondary text-xs" @click="$dispatch('open-modal', { id: 'editPermission', data: { id: '{{ $permission->id }}' } })">
                                             <x-lucide-edit />
                                             Edit
                                         </button>
@@ -100,6 +100,15 @@
         <form wire:submit="create">
         {{  $this->form }}
         <button type="submit" class="btn mt-5">Create</button>
+        </form>
+    </x-filament::modal>
+    <x-filament::modal id="editPermission">
+        <x-slot name="heading">
+            Edit Permission
+        </x-slot>
+        <form wire:submit="update">
+        {{  $this->form }}
+        <button type="submit" class="btn mt-5">Update</button>
         </form>
     </x-filament::modal>
     <x-filament::modal id="confirmDelete">
