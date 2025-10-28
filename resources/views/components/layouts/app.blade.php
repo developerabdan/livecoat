@@ -28,7 +28,8 @@
 
             document.addEventListener('livewire:navigated', () => {
                 const stored = localStorage.getItem('themeMode');
-                const darkMode = stored === 'dark' || (stored === null && matchMedia('(prefers-color-scheme: dark)').matches);
+                const darkMode = stored === 'dark' || (stored === null && matchMedia(
+                    '(prefers-color-scheme: dark)').matches);
                 apply(darkMode);
             });
         })();
@@ -46,6 +47,8 @@
     <script src="{{ asset('assets/js/basecoat.min.js') }}" defer></script>
     <script src="{{ asset('assets/js/sidebar.min.js') }}" defer></script>
     <script src="{{ asset('assets/js/popover.min.js') }}?id={{ rand() }}" data-navigate-track defer></script>
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . setting('app_icon.path')) }}">
+
 </head>
 
 <body class="antialiased">

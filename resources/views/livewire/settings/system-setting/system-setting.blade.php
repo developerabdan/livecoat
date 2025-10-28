@@ -10,6 +10,22 @@
                     <section class="text-sm grid gap-6">
                         <label class="flex items-center justify-between gap-2">
                             <div class="flex flex-col gap-0.5">
+                                <div class="font-medium">{{ __('Clear Cache') }}</div>
+                                <div class="text-muted-foreground">
+                                    {{ __('Clear the application cache to ensure that your changes take effect.') }}
+                                </div>
+                            </div>
+                            <button class="btn-secondary"
+                                @click="$dispatch('open-modal', { id: 'clear-cache-modal'})">{{ __('Clear') }}</button>
+                        </label>
+                    </section>
+                </div>
+            </div>
+            <div class="card">
+                <div class="p-4">
+                    <section class="text-sm grid gap-6">
+                        <label class="flex items-center justify-between gap-2">
+                            <div class="flex flex-col gap-0.5">
                                 <div class="font-medium">{{ __('App Icon') }}</div>
                                 <div class="text-muted-foreground">
                                     {{ __('Upload the image that will be used as your app’s icon.”') }}</div>
@@ -23,7 +39,8 @@
                                 <div class="text-muted-foreground">
                                     {{ __('Configure the image asset used as your app’s primary logo.') }}</div>
                             </div>
-                            <button class="btn-secondary">{{ __('Manage') }}</button>
+                            <button class="btn-secondary"
+                                @click="$dispatch('open-modal', { id: 'app-logo-modal'})">{{ __('Manage') }}</button>
                         </label>
                     </section>
                 </div>
@@ -78,6 +95,23 @@
         <form wire:submit.prevent="updateAppIcon">
             {{ $this->appIcon }}
             <button type="submit" class="btn mt-5">{{ __('Upload') }}</button>
+        </form>
+    </x-filament::modal>
+    <x-filament::modal id="app-logo-modal">
+        <x-slot name="heading">
+            {{ __('Manage App Logo') }}
+        </x-slot>
+        <form wire:submit.prevent="updateAppLogo">
+            {{ $this->appLogo }}
+            <button type="submit" class="btn mt-5">{{ __('Upload') }}</button>
+        </form>
+    </x-filament::modal>
+    <x-filament::modal id="clear-cache-modal">
+        <x-slot name="heading">
+            {{ __('Are you sure you want to clear the cache?') }}
+        </x-slot>
+        <form wire:submit.prevent="clearCache">
+            <button type="submit" class="btn w-full">{{ __('Clear') }}</button>
         </form>
     </x-filament::modal>
 </x-layouts.main>

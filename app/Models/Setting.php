@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    //
+    protected $casts = [
+        'value' => 'array', // Automatically decode JSON
+    ];
 }

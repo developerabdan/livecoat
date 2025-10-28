@@ -7,8 +7,9 @@ use Livewire\Component;
 use Filament\Schemas\Schema;
 use Livewire\Attributes\Title;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\FileUpload;
+use Illuminate\Support\Facades\Cache;
 use Filament\Notifications\Notification;
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 
@@ -58,6 +59,26 @@ class SystemSetting extends Component implements HasSchemas
             ])
             ->statePath('data');
     }
+    public function appLogo(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                FileUpload::make('app_logo')
+                    ->image()
+                    ->hiddenLabel()
+                    ->imageEditor()
+                    ->directory('systems')
+                    ->disk('public')
+                    ->visibility('public')
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('1:1')
+                    ->imageResizeTargetWidth('100')
+                    ->imageResizeTargetHeight('100')
+                    ->required(),
+                // ...
+            ])
+            ->statePath('data');
+    }
     public function updateAppIcon()
     {
         $data = $this->appIcon->getState();
@@ -73,6 +94,31 @@ class SystemSetting extends Component implements HasSchemas
             ->success()
             ->send();
         $this->dispatch('close-modal', id: 'app-icon-modal');
+    }
+    public function clearCache()
+    {
+        Cache::forget('settings');
+        Notification::make()
+            ->title(__('Cache cleared successfully'))
+            ->success()
+            ->send();
+        $this->redirect(route('app.settings.system-setting'));
+    }
+    public function updateAppLogo()
+    {
+        $data = $this->appLogo->getState();
+        Setting::query()
+            ->where('key', 'app_logo')
+            ->update([
+                'value' => [
+                    'path' => $data['app_logo']
+                ]
+            ]);
+        Notification::make()
+            ->title(__('App logo updated successfully'))
+            ->success()
+            ->send();
+        $this->dispatch('close-modal', id: 'app-logo-modal');
     }
     public function enableGoogleRecaptcha(Schema $schema): Schema
     {

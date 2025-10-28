@@ -5,13 +5,13 @@
         <header>
 
             <a href="/" class="btn-ghost p-2 h-12 w-full justify-start">
-                <div
-                    class="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                    <img src="{{ asset('logo-base.png') }}" alt="Logo">
+                <div class=" flex aspect-square size-8 items-center justify-center rounded-lg">
+                    <img src="{{ setting('app_logo.path') ? asset('storage/' . setting('app_logo.path')) : asset('logo-base.png') }}"
+                        alt="Logo">
                 </div>
                 <div class="grid flex-1 text-left text-sm leading-tight">
-                    <span class="truncate font-medium">{{ config('app.name') }}</span>
-                    <span class="truncate text-xs">v{{ config('app.version') }}</span>
+                    <span class="truncate font-medium">{{ setting('app_name.name') ?? config('app.name') }}</span>
+                    <span class="truncate text-xs">v{{ setting('app_version.version') ?? config('app.version') }}</span>
                 </div>
             </a>
         </header>
@@ -27,8 +27,9 @@
                                     @if (isset($item['sub']) && count($item['sub']) > 0)
                                         {{-- Menu item with submenu --}}
                                         @php
-                                            $visibleSubItems = collect($item['sub'])->filter(function($subItem) {
-                                                return !isset($subItem['permission']) || auth()->user()->can($subItem['permission']);
+                                            $visibleSubItems = collect($item['sub'])->filter(function ($subItem) {
+                                                return !isset($subItem['permission']) ||
+                                                    auth()->user()->can($subItem['permission']);
                                             });
                                         @endphp
                                         @if ($visibleSubItems->isNotEmpty())
@@ -39,7 +40,8 @@
                                                     <x-dynamic-component :component="$item['icon']" />
                                                     {{ $item['title'] }}
                                                 </summary>
-                                                <ul id="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}-content">
+                                                <ul
+                                                    id="submenu-content-{{ $groupIndex }}-{{ $itemIndex }}-content">
                                                     @foreach ($item['sub'] as $subItem)
                                                         @if (!isset($subItem['permission']) || auth()->user()->can($subItem['permission']))
                                                             <li>
@@ -73,7 +75,8 @@
                     aria-controls="popover-account-popover"
                     class="btn-ghost p-2 h-12 w-full flex items-center justify-start" data-keep-mobile-sidebar-open="">
 
-                    <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('assets/images/profile-default.png') }}" class="rounded-lg shrink-0 size-8">
+                    <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('assets/images/profile-default.png') }}"
+                        class="rounded-lg shrink-0 size-8">
                     <div class="grid flex-1 text-left text-sm leading-tight">
                         <span class="truncate font-medium">{{ auth()->user()->name }}</span>
                         <span class="truncate text-xs">{{ auth()->user()->email }}</span>
