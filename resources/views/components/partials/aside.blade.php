@@ -73,7 +73,7 @@
                     aria-controls="popover-account-popover"
                     class="btn-ghost p-2 h-12 w-full flex items-center justify-start" data-keep-mobile-sidebar-open="">
 
-                    <img src="https://github.com/hunvreus.png" class="rounded-lg shrink-0 size-8">
+                    <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('assets/images/profile-default.png') }}" class="rounded-lg shrink-0 size-8">
                     <div class="grid flex-1 text-left text-sm leading-tight">
                         <span class="truncate font-medium">{{ auth()->user()->name }}</span>
                         <span class="truncate text-xs">{{ auth()->user()->email }}</span>
@@ -92,7 +92,7 @@
                     <div class="grid gap-3">
                         <!-- User Info Header -->
                         <div class="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-                            <img src="https://github.com/hunvreus.png"
+                            <img src="{{ auth()->user()->avatar ? asset('storage/' . auth()->user()->avatar) : asset('assets/images/profile-default.png') }}"
                                 class="rounded-full shrink-0 size-10 ring-2 ring-gray-200 dark:ring-gray-700">
                             <div class="grid flex-1 text-left text-sm leading-tight">
                                 <span

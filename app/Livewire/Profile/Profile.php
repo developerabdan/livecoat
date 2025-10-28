@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Profile;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
@@ -25,6 +26,27 @@ class Profile extends Component implements HasSchemas
     public function mount(): void
     {
         $this->changePasswordSchema->fill();
+    }
+    public function changeAvatarSchema(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                FileUpload::make('avatar')
+                    ->image()
+                    ->hiddenLabel()
+                    ->imageEditor()
+                    ->circleCropper()
+                    ->directory('avatars')
+                    ->disk('public')
+                    ->visibility('public')
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('1:1')
+                    ->imageResizeTargetWidth('100')
+                    ->imageResizeTargetHeight('100')
+                    ->required(),
+            ])
+            ->statePath('data')
+            ->model(Auth::user());
     }
     public function changePasswordSchema(Schema $schema): Schema
     {
@@ -70,5 +92,20 @@ class Profile extends Component implements HasSchemas
             ->success()
             ->send();
         $this->dispatch('close-modal',id:'changePassword');
+    }
+    public function changeAvatar()
+    {
+        $data = $this->changeAvatarSchema->getState();
+        
+        Auth::user()->update([
+            'avatar' => $data['avatar']
+        ]);
+        
+        Notification::make()
+            ->title(__('Avatar updated successfully'))
+            ->success()
+            ->send();
+        
+        $this->dispatch('close-modal', id: 'changeAvatar');
     }
 }
