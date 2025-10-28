@@ -53,15 +53,6 @@
                                         <p class="text-xs text-gray-500">{{ $permission->description }}</p>
                                     </div>
                                     <div class="flex gap-2">
-                                        @if(auth()->user()->cannot($permission->name))
-                                        <button class="btn-sm text-xs">
-                                            <x-lucide-lock-open />
-                                        </button>
-                                        @else
-                                        <button class="btn-sm-destructive text-xs">
-                                            <x-lucide-lock />
-                                        </button>
-                                        @endif
                                         <button class="btn-sm-secondary text-xs">
                                             <x-lucide-edit />
                                             Edit

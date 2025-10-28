@@ -25,6 +25,11 @@
                                 'route' => route('app.settings.permission'),
                                 'active' => request()->routeIs('app.settings.permission'),
                             ],
+                            [
+                                'title' => __('Roles'),
+                                'route' => route('app.settings.role'),
+                                'active' => request()->routeIs('app.settings.role'),
+                            ],
                         ],
                     ],
                 ],
