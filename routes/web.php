@@ -7,10 +7,12 @@ use App\Livewire\Profile\Profile;
 use App\Livewire\Settings\Permission\Permission;
 use App\Livewire\Settings\PermissionGroup\PermissionGroup;
 use App\Livewire\Settings\Role\Role;
+use App\Livewire\Settings\SystemSetting\SystemSetting;
 use App\Livewire\UserManagement\UserManagement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 
 
 Route::get('/', function () {
@@ -38,6 +40,9 @@ Route::group(['prefix' => 'app','as' => 'app.', 'middleware' => 'auth'],function
         Route::get('/role',Role::class)
             ->middleware('can:View Roles')
             ->name('role');
+        Route::get('/system-setting',SystemSetting::class)
+            ->middleware('can:View System Settings')
+            ->name('system-setting');
     });
     Route::get('/logout',function(Request $request){
         Auth::logout();

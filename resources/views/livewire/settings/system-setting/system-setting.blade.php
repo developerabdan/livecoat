@@ -1,0 +1,36 @@
+<x-layouts.main>
+    <div class="p-4 md:p-6 xl:p-12">
+        <header class="space-y-2">
+            <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl xl:text-4xl">{{ __('System Settings') }}</h1>
+            <p class="text-muted-foreground text-[1.05rem] sm:text-base">{{ __('Manage system settings') }}</p>
+        </header>
+        <div class="mt-6 flex flex-col gap-2">
+            <div class="card">
+                <div class="p-4">
+                    <section class="text-sm grid gap-6">
+                        <label class="flex items-center justify-between gap-2">
+                            <div class="flex flex-col gap-0.5">
+                                <div class="font-medium">{{ __('Enable Time-Based One-Time Passwords (TOTP) Authenticator') }}</div>
+                                <div class="text-muted-foreground">{{ __('Add an extra layer of security to your account by generating time-based one-time passcodes using a compatible authenticator app.') }}</div>
+                            </div>
+                            {{ $this->enableTotp }}
+                        </label>
+                    </section>
+                </div>
+            </div>
+            <div class="card">
+                <div class="p-4">
+                    <section class="text-sm grid gap-6">
+                        <label class="flex items-center justify-between gap-2">
+                            <div class="flex flex-col gap-0.5">
+                                <div class="font-medium">{{ __('Enable Google Recaptcha') }}</div>
+                                <div class="text-muted-foreground">{{ __('Enable Google reCAPTCHA to verify human interaction and prevent automated submissions.') }}</div>
+                            </div>
+                            {{ $this->enableGoogleRecaptcha }}
+                        </label>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-layouts.main>

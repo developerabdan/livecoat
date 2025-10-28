@@ -41,6 +41,12 @@
                                 'active' => request()->routeIs('app.settings.role'),
                                 'permission' => 'View Roles'
                             ],
+                            [
+                                'title' => __('System Settings'),
+                                'route' => route('app.settings.system-setting'),
+                                'active' => request()->routeIs('app.settings.system-setting'),
+                                'permission' => 'View System Settings'
+                            ],
                         ],
                     ],
                 ],
