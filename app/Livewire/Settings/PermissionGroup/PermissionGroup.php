@@ -36,6 +36,12 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
             ->toolbarActions([
                 CreateAction::make()
                             ->schema([
+                                TextInput::make('category')
+                                        ->datalist(function(){
+                                            return ModelsPermissionGroup::query()->pluck('category')->unique()->toArray();
+                                        })
+                                        ->autocomplete(false)
+                                        ->placeholder(__('Category')),
                                 TextInput::make('name')
                                         ->placeholder(__('Name'))
                                         ->required(),
@@ -47,6 +53,7 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
                             ->successNotificationTitle(__('Permission Group Created'))
                             ->action(function (array $data): void {
                                 ModelsPermissionGroup::query()->create([
+                                    'category' => Str::slug($data['category']),
                                     'name' => $data['name'],
                                     'slug' => Str::slug($data['name']),
                                     'icon' => $data['icon'],
@@ -55,6 +62,8 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
                             })
             ])
             ->columns([
+                TextColumn::make('category')
+                        ->searchable(),
                 TextColumn::make('name')
                         ->searchable(),
                 TextColumn::make('icon'),
@@ -66,17 +75,23 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
             ->recordActions([
                 EditAction::make()
                             ->schema([
+                                TextInput::make('category')
+                                        ->placeholder(__('Category')),
                                 TextInput::make('name')
                                         ->placeholder(__('Name'))
                                         ->required(),
+                                TextInput::make('icon')
+                                    ->placeholder(__('Icon')),
                                 TextInput::make('description')
                                         ->placeholder(__('Description')),
                             ])
                             ->successNotificationTitle(__('Permission Group Updated'))
                             ->action(function (array $data,$record): void {
                                 $record->update([
+                                    'category' => Str::slug($data['category']),
                                     'name' => $data['name'],
                                     'slug' => Str::slug($data['name']),
+                                    'icon' => $data['icon'],
                                     'description' => $data['description'],
                                 ]);
                             }),

@@ -45,6 +45,7 @@
     @vite('resources/css/app.css')
     <script src="{{ asset('assets/js/basecoat.min.js') }}" defer></script>
     <script src="{{ asset('assets/js/sidebar.min.js') }}" defer></script>
+    <script src="{{ asset('assets/js/popover.min.js') }}?id={{ rand() }}" data-navigate-track defer></script>
 </head>
 
 <body class="antialiased">

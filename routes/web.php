@@ -6,6 +6,8 @@ use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Settings\Permission\Permission;
 use App\Livewire\Settings\PermissionGroup\PermissionGroup;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,4 +24,10 @@ Route::group(['prefix' => 'app','as' => 'app.', 'middleware' => 'auth'],function
         Route::get('/permission-group',PermissionGroup::class)->name('permission-group');
         Route::get('/permission',Permission::class)->name('permission');
     });
+    Route::get('/logout',function(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('auth.login');
+    })->name('logout');
 });

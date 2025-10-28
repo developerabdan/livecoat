@@ -20,6 +20,7 @@ class Permission extends Component implements HasSchemas
 {
     use InteractsWithSchemas;
     public $selectedGroupId;
+    public $selectedPermissionId;
 
     public ?array $data = [];
     
@@ -31,9 +32,9 @@ class Permission extends Component implements HasSchemas
     {
         return view('livewire.settings.permission.permission');
     }
-    #[Computed]
+    #[Computed] #[On('refresh-permission-group')]
     public function permissionGroup(){
-        return PermissionGroup::query()->with('permissions')->get();
+        return PermissionGroup::query()->with('permissions')->get()->groupBy('category');
     }
 
     public function form(Schema $schema): Schema
@@ -68,13 +69,30 @@ class Permission extends Component implements HasSchemas
             ->title(__('Saved successfully'))
             ->success()
             ->send();
+        $this->dispatch('refresh-permission-group');
+        $this->dispatch('close-modal',id:'addPermission');
+    }
+    public function delete()
+    {
+        ModelsPermission::query()->where('id',$this->selectedPermissionId)->delete();
+        Notification::make()
+            ->title(__('Deleted successfully'))
+            ->success()
+            ->send();
+        $this->dispatch('refresh-permission-group');
+        $this->dispatch('close-modal',id:'confirmDelete');
     }
     #[On('open-modal')]
     public function openModal($id,$data)
     {
-        $this->selectedGroupId = $data['group_id'];
-        $this->form->fill([
-            'permission_group_id' => $this->selectedGroupId
-        ]);
+        if($id == 'addPermission'){
+            $this->selectedGroupId = $data['group_id'];
+            $this->form->fill([
+                'permission_group_id' => $this->selectedGroupId
+            ]);
+        }
+        if($id == 'confirmDelete'){
+            $this->selectedPermissionId = $data['id'];
+        }
     }
 }

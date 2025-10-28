@@ -10,6 +10,7 @@ class PermissionGroup extends Model
     use HasUlids;
     protected $table = "permission_groups";
     protected $fillable = [
+        'category',
         "name",
         "slug",
         "icon",

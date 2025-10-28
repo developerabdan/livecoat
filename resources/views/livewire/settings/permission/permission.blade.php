@@ -6,9 +6,11 @@
         </header>
         <div class="mt-6">
             <div class="card">
-                <section class="accordion space-y-4" wire:ignore>
-                    @foreach($this->permissionGroup as $item)
-                    <details class="group border rounded-lg bg-primary-foreground shadow-sm">
+                <section class="accordion space-y-4">
+                    @foreach($this->permissionGroup as $category => $permissionGroup)
+                    <h3 class="font-semibold text-xl sm:text-xl xl:text-xl flex items-center gap-2"><x-lucide-grip class="w-5 h-5" /> {{ Str::title(Str::replace('-',' ',$category)) }}</h3>
+                    @foreach($permissionGroup as $item)
+                    <details class="group border rounded-lg bg-primary-foreground shadow-sm" wire:ignore.self>
                         <summary class="w-full cursor-pointer outline-none rounded-lg">
                             <div class="flex w-full justify-between items-center gap-4 p-4">
                                 <div class="flex items-center gap-4">
@@ -28,43 +30,21 @@
                             </div>
                         </summary>
                         <div class="px-4 pb-4 space-y-2">
-                            <div class="flex items-start gap-3 p-3 rounded-lg bg-foreground-primary">
-                                <div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
-                                    <x-lucide-lock class="text-primary-foreground w-4 h-4" />
-                                </div>
-                                <div class="flex w-full justify-between">
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <h3 class="text-sm font-medium text-primary">Create Users</h3>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-primary text-primary-foreground">Granted</span>
-                                        </div>
-                                        <p class="text-xs text-gray-500">Add new users to the system</p>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button class="btn-sm-destructive text-xs">
-                                            <x-lucide-lock />
-                                        </button>
-                                        <button class="btn-sm-secondary text-xs">
-                                            <x-lucide-edit />
-                                            Edit
-                                        </button>
-                                        <button class="btn-sm-secondary text-xs">
-                                            <x-lucide-trash />
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                             @foreach($item->permissions as $permission)
                             <div class="flex items-start gap-3 p-3 rounded-lg bg-foreground-primary">
-                                <div class="w-8 h-8 rounded-md bg-primary/40 flex items-center justify-center">
+                                <div @class([
+                                    "w-8 h-8 rounded-md bg-primary/40 flex items-center justify-center",
+                                    "bg-primary/40" => auth()->user()->cannot($permission->name),
+                                    "bg-primary" => auth()->user()->can($permission->name)
+                                ])
+                                >
                                     <x-lucide-lock class="text-primary-foreground w-4 h-4" />
                                 </div>
                                 <div class="flex w-full justify-between">
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-1">
                                             <h3 class="text-sm font-medium text-primary">{{ $permission->name }}</h3>
-                                            @if(auth()->user()->can($permission->name))
+                                            @if(auth()->user()->cannot($permission->name))
                                             <span class="px-2 py-0.5 rounded text-xs font-medium bg-primary/40 text-white">Denied</span>
                                             @else
                                             <span class="px-2 py-0.5 rounded text-xs font-medium bg-primary text-primary-foreground">Granted</span>
@@ -73,26 +53,32 @@
                                         <p class="text-xs text-gray-500">{{ $permission->description }}</p>
                                     </div>
                                     <div class="flex gap-2">
+                                        @if(auth()->user()->cannot($permission->name))
                                         <button class="btn-sm text-xs">
                                             <x-lucide-lock-open />
                                         </button>
+                                        @else
+                                        <button class="btn-sm-destructive text-xs">
+                                            <x-lucide-lock />
+                                        </button>
+                                        @endif
                                         <button class="btn-sm-secondary text-xs">
                                             <x-lucide-edit />
                                             Edit
                                         </button>
-                                        <button class="btn-sm-secondary text-xs">
+                                        <button class="btn-sm-secondary text-xs" @click="$dispatch('open-modal', { id: 'confirmDelete', data: { id: '{{ $permission->id }}' } })">
                                             <x-lucide-trash />
-                                            Delete
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
                             <div class="flex items-start gap-3 p-3 rounded-lg bg-foreground-primary">
-                                <button @click="$dispatch('open-modal', { id: 'addPermission', data: { group_id: '01k8j9fz8zrvpx075hdyznn3fh' } })" class="btn-ghost w-full">{{ __('Add New Permissions') }} <x-lucide-shield-plus /></button>
+                                <button @click="$dispatch('open-modal', { id: 'addPermission', data: { group_id: '{{ $item->id  }}' } })" class="btn-ghost w-full">{{ __('Add New Permissions') }} <x-lucide-shield-plus /></button>
                             </div>
                         </div>
                     </details>
+                    @endforeach
                     @endforeach
                 </section>
                 <script>
@@ -123,6 +109,15 @@
         <form wire:submit="create">
         {{  $this->form }}
         <button type="submit" class="btn mt-5">Create</button>
+        </form>
+    </x-filament::modal>
+    <x-filament::modal id="confirmDelete">
+        <x-slot name="heading">
+            Delete Permission
+        </x-slot>
+        <form wire:submit="delete">
+            <p>Are you sure you want to delete this permission?</p>
+        <button type="submit" class="btn mt-5">Delete</button>
         </form>
     </x-filament::modal>
 </x-layouts.main>
