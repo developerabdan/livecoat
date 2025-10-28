@@ -14,7 +14,8 @@
                                 <div class="text-muted-foreground">
                                     {{ __('Upload the image that will be used as your app’s icon.”') }}</div>
                             </div>
-
+                            <button class="btn-secondary"
+                                @click="$dispatch('open-modal', { id: 'app-icon-modal'})">{{ __('Manage') }}</button>
                         </label>
                         <label class="flex items-center justify-between gap-2">
                             <div class="flex flex-col gap-0.5">
@@ -22,7 +23,7 @@
                                 <div class="text-muted-foreground">
                                     {{ __('Configure the image asset used as your app’s primary logo.') }}</div>
                             </div>
-
+                            <button class="btn-secondary">{{ __('Manage') }}</button>
                         </label>
                     </section>
                 </div>
@@ -70,4 +71,13 @@
             </div>
         </div>
     </div>
+    <x-filament::modal id="app-icon-modal">
+        <x-slot name="heading">
+            {{ __('Manage App Icon') }}
+        </x-slot>
+        <form wire:submit.prevent="updateAppIcon">
+            {{ $this->appIcon }}
+            <button type="submit" class="btn mt-5">{{ __('Upload') }}</button>
+        </form>
+    </x-filament::modal>
 </x-layouts.main>
