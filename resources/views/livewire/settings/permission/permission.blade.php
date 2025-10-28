@@ -53,20 +53,26 @@
                                         <p class="text-xs text-gray-500">{{ $permission->description }}</p>
                                     </div>
                                     <div class="flex gap-2">
+                                        @can('Edit Permissions')
                                         <button class="btn-sm-secondary text-xs" @click="$dispatch('open-modal', { id: 'editPermission', data: { id: '{{ $permission->id }}' } })">
                                             <x-lucide-edit />
                                             Edit
                                         </button>
+                                        @endcan
+                                        @can('Delete Permissions')
                                         <button class="btn-sm-secondary text-xs" @click="$dispatch('open-modal', { id: 'confirmDelete', data: { id: '{{ $permission->id }}' } })">
                                             <x-lucide-trash />
                                         </button>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
                             @endforeach
+                            @can('Create Permissions')
                             <div class="flex items-start gap-3 p-3 rounded-lg bg-foreground-primary">
                                 <button @click="$dispatch('open-modal', { id: 'addPermission', data: { group_id: '{{ $item->id  }}' } })" class="btn-ghost w-full">{{ __('Add New Permissions') }} <x-lucide-shield-plus /></button>
                             </div>
+                            @endcan
                         </div>
                     </details>
                     @endforeach

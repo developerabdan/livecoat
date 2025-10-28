@@ -40,6 +40,9 @@
 .fi-text-color-900 {
     color: var(--color-primary-foreground);
 }
+.fi-icon {
+    color: var(--color-gray-500)
+}
 .fi-text-color-700 {
     color: var(--color-primary);
 }

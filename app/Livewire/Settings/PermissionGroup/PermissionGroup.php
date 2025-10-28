@@ -35,6 +35,7 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
             ->query(ModelsPermissionGroup::query())
             ->toolbarActions([
                 CreateAction::make()
+                            ->authorize('Create Permission Groups')
                             ->schema([
                                 TextInput::make('category')
                                         ->datalist(function(){
@@ -74,6 +75,7 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
             ])
             ->recordActions([
                 EditAction::make()
+                            ->authorize('Edit Permission Groups')
                             ->schema([
                                 TextInput::make('category')
                                         ->placeholder(__('Category')),
@@ -96,6 +98,7 @@ class PermissionGroup extends Component implements HasTable, HasSchemas, HasActi
                                 ]);
                             }),
                 DeleteAction::make()
+                            ->authorize('Delete Permission Groups')
                             ->successNotificationTitle(__('Permission Group Deleted'))
                             ->action(function (array $data,$record): void {
                                 $record->delete();

@@ -110,5 +110,35 @@ class RoleSeeder extends Seeder
                 'guard_name' => 'web',
             ],
         ]);
+        $users = PermissionGroup::query()
+                            ->create([
+                                'category' => 'users-and-role-based-access',
+                                'name' => 'User Management',
+                                'slug' => 'user-management',
+                                'icon' => 'lucide-user',
+                                'description' => 'Manage all users',
+                            ]);
+        $users->permissions()->createMany([
+            [
+                'name' => 'View Users',
+                'description' => 'View available users',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Create Users',
+                'description' => 'Add new user to the system',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Edit Users',
+                'description' => 'Edit specific user in the system',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Delete Users',
+                'description' => 'Delete specific user from the system',
+                'guard_name' => 'web',
+            ],
+        ]);
     }
 }

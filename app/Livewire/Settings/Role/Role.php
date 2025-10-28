@@ -36,6 +36,7 @@ class Role extends Component implements HasTable, HasSchemas, HasActions
             ->query(ModelsRole::query())
             ->toolbarActions([
                 CreateAction::make()
+                            ->authorize('Create Roles')
                             ->schema([
                                 TextInput::make('name')
                                         ->placeholder(__('Name'))
@@ -85,6 +86,7 @@ class Role extends Component implements HasTable, HasSchemas, HasActions
             ])
             ->recordActions([
                 EditAction::make()
+                            ->authorize('Edit Roles')
                             ->fillForm(function (ModelsRole $record): array {
                                 return [
                                     'name' => $record->name,
@@ -123,6 +125,7 @@ class Role extends Component implements HasTable, HasSchemas, HasActions
                                 }
                             }),
                 DeleteAction::make()
+                            ->authorize('Delete Roles')
                             ->successNotificationTitle(__('Role Deleted'))
                             ->action(function (array $data,$record): void {
                                 $record->delete();

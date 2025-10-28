@@ -12,6 +12,13 @@
                         'permission' => 'View Dashboard'
                     ],
                     [
+                        'title' => __('User Access'),
+                        'icon' => 'lucide-user',
+                        'route' => route('app.user'),
+                        'active' => request()->routeIs('app.user'),
+                        'permission' => 'View Users'
+                    ],
+                    [
                         'title' => __('Settings'),
                         'icon' => 'lucide-settings',
                         'active' => request()->routeIs('app.settings.*'),

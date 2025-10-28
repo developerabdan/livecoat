@@ -58,6 +58,7 @@ class Permission extends Component implements HasSchemas
             ->statePath('data');
     }
     public function create(){
+        $this->authorize('Create Permissions');
         $data = $this->form->getState();
         ModelsPermission::query()->create([
             'permission_group_id' => $data['permission_group_id'],
@@ -74,6 +75,7 @@ class Permission extends Component implements HasSchemas
     }
     public function update()
     {
+        $this->authorize('Edit Permissions');
         $data = $this->form->getState();
         ModelsPermission::query()->where('id',$this->selectedPermissionId)->update([
             'permission_group_id' => $data['permission_group_id'],
@@ -90,6 +92,7 @@ class Permission extends Component implements HasSchemas
     }
     public function delete()
     {
+        $this->authorize('Delete Permissions');
         ModelsPermission::query()->where('id',$this->selectedPermissionId)->delete();
         Notification::make()
             ->title(__('Deleted successfully'))
