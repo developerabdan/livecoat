@@ -11,7 +11,7 @@
                 </div>
                 <div class="grid flex-1 text-left text-sm leading-tight">
                     <span class="truncate font-medium">{{ config('app.name') }}</span>
-                    <span class="truncate text-xs">v1.0.0</span>
+                    <span class="truncate text-xs">v{{ config('app.version') }}</span>
                 </div>
             </a>
         </header>
@@ -104,7 +104,7 @@
 
                         <!-- Menu Items -->
                         <div class="grid gap-2">
-                            <a href=""
+                            <a wire:navigate href="{{ route('app.profile') }}"
                                 class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150"
                                 wire:navigate>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -116,7 +116,7 @@
                                 <span>Profile</span>
                             </a>
 
-                            <a href="{{ route('app.logout') }}"
+                            <a wire:navigate href="{{ route('app.logout') }}"
                                 class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"
                                 wire:navigate>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Dashboard\Dashboard;
+use App\Livewire\Profile\Profile;
 use App\Livewire\Settings\Permission\Permission;
 use App\Livewire\Settings\PermissionGroup\PermissionGroup;
 use App\Livewire\Settings\Role\Role;
@@ -20,6 +21,8 @@ Route::group(['prefix' => 'auth','as' => 'auth.','middleware' => 'guest'],functi
 
 Route::group(['prefix' => 'app','as' => 'app.', 'middleware' => 'auth'],function(){
     Route::get('/dashboard',Dashboard::class)->name('dashboard');
+
+    Route::get('/profile',Profile::class)->name('profile');
 
     Route::group(['prefix' => 'settings','as' => 'settings.'],function(){
         Route::get('/permission-group',PermissionGroup::class)->name('permission-group');

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('permission_groups', function (Blueprint $table) {
             $table->ulid('id')->primary()->unique();
+            $table->string('category')->nullable();
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->string('icon')->nullable();

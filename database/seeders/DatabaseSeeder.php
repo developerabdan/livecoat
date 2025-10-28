@@ -18,17 +18,9 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $user = User::query()->firstOrCreate([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ], [
-            'password' => 'password',
+        $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
         ]);
-        $role = Role::query()->firstOrCreate([
-            'name' => 'Super Admin',
-        ], [
-            'guard_name' => 'web',
-        ]);
-        $user->assignRole($role);
     }
 }
