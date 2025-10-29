@@ -36,7 +36,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Blank' }} | {{ config('app.name') }}</title>
+    <title>{{ $title ?? 'Blank' }} | {{ setting('app_name.name') ?? config('app.name') }}</title>
     <style>
         [x-cloak] {
             display: none !important;
