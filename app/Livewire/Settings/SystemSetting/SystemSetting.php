@@ -18,7 +18,13 @@ use Livewire\Component;
 class SystemSetting extends Component implements HasSchemas
 {
     use InteractsWithSchemas;
-    public ?array $data = [];
+    public ?array $dataAppVersion = [];
+    public ?array $dataEnableTotp = [];
+    public ?array $dataEnableGoogleRecaptcha = [];
+    public ?array $dataAppIcon = [];
+    public ?array $dataAppName = [];
+    public ?array $dataLoginLogo = [];
+    public ?array $dataAppLogo = [];
     public function render()
     {
         return view('livewire.settings.system-setting.system-setting');
@@ -29,7 +35,12 @@ class SystemSetting extends Component implements HasSchemas
         $this->appVersion->fill([
             'app_version' => setting('app_version.version')
         ]);
-        $this->enableTotp->fill();
+        $this->appName->fill([
+            'app_name' => setting('app_name.name')
+        ]);
+        $this->enableTotp->fill([
+            'enable_totp' => cccccccccccccccccc
+        ]);
         $this->appIcon->fill([
             'app_icon' => setting('app_icon.path')
         ]);
@@ -49,9 +60,22 @@ class SystemSetting extends Component implements HasSchemas
             ->components([
                 Toggle::make('enable_totp')
                     ->hiddenLabel()
-                // ...
+                    ->live()
+                    ->reactive()
+                    ->afterStateUpdated(function ($state) {
+                        Setting::query()
+                            ->updateOrCreate([
+                                'key' => 'enable_totp'
+                            ], [
+                                'value' => ['enabled' => $state]
+                            ]);
+                        Notification::make()
+                            ->title(__('Enable TOTP updated successfully'))
+                            ->success()
+                            ->send();
+                    })
             ])
-            ->statePath('data');
+            ->statePath('dataEnableTotp');
     }
     public function appIcon(Schema $schema): Schema
     {
@@ -68,7 +92,7 @@ class SystemSetting extends Component implements HasSchemas
                     ->imageCropAspectRatio('1:1')
                     ->required(),
             ])
-            ->statePath('data');
+            ->statePath('dataAppIcon');
     }
     public function loginLogo(Schema $schema): Schema
     {
@@ -97,7 +121,7 @@ class SystemSetting extends Component implements HasSchemas
                     ->required(),
                 // ...
             ])
-            ->statePath('data');
+            ->statePath('dataLoginLogo');
     }
 
     public function appLogo(Schema $schema): Schema
@@ -126,7 +150,7 @@ class SystemSetting extends Component implements HasSchemas
                     ->required(),
                 // ...
             ])
-            ->statePath('data');
+            ->statePath('dataAppLogo');
     }
     public function appVersion(Schema $schema): Schema
     {
@@ -151,7 +175,7 @@ class SystemSetting extends Component implements HasSchemas
                     })
                     ->hiddenLabel()
             ])
-            ->statePath('data');
+            ->statePath('dataAppVersion');
     }
     public function appName(Schema $schema): Schema
     {
@@ -175,7 +199,7 @@ class SystemSetting extends Component implements HasSchemas
                     })
                     ->hiddenLabel()
             ])
-            ->statePath('data');
+            ->statePath('dataAppName');
     }
     public function updateAppIcon()
     {
@@ -247,6 +271,6 @@ class SystemSetting extends Component implements HasSchemas
                     ->hiddenLabel()
                 // ...
             ])
-            ->statePath('data');
+            ->statePath('dataEnableGoogleRecaptcha');
     }
 }

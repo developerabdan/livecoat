@@ -43,6 +43,10 @@ class SettingSeeder extends Seeder
                 'key' => 'google_recaptcha_v2',
                 'value' => []
             ],
+            [
+                'key' => 'enable_totp',
+                'value' => []
+            ]
         ];
         foreach ($settings as $setting) {
             Setting::query()
