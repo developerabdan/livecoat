@@ -158,7 +158,7 @@ class SystemSetting extends Component implements HasSchemas
         return $schema
             ->components([
                 TextInput::make('app_name')
-                    ->placeholder('eg: 1.0.0')
+                    ->placeholder('eg: Livecoat')
                     ->required()    
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (string $state) {
