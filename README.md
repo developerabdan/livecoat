@@ -13,9 +13,8 @@ Livecoat is a comprehensive starter template designed for backend developers who
 
 ### 🔐 Authentication & Security
 - **TOTP Authenticator** - Built-in two-factor authentication using pragmRX
-- **Google reCAPTCHA v2** - Protect your forms from bots
+- **Google reCAPTCHA v2** - Protect your logins from bots
 - **Role-based Permissions** - Integrated Spatie role and permissions system
-- **Secure session management** - Laravel's robust authentication system
 
 ### 🎨 User Interface & Experience
 - **BasecoatUI Components** - Beautiful, modern UI components (shadcn-inspired)
@@ -34,6 +33,73 @@ Livecoat is a comprehensive starter template designed for backend developers who
 - **Role Management** - Flexible role and permission system
 - **Profile Management** - User profile editing with avatar support
 - **Settings Panel** - Application configuration interface
+- **Dynamic Menu System** - Hierarchical navigation with permission-based access control
+
+### 🎯 Built-in Menu Structure
+
+The starter kit includes a comprehensive menu system with the following structure:
+
+```php
+$menu = [
+    [
+        'group' => __('General'),
+        'items' => [
+            [
+                'title' => __('Dashboard'),
+                'icon' => 'lucide-home',
+                'route' => route('app.dashboard'),
+                'active' => request()->routeIs('app.dashboard'),
+                'permission' => 'View Dashboard'
+            ],
+            [
+                'title' => __('User Access'),
+                'icon' => 'lucide-user',
+                'route' => route('app.user'),
+                'active' => request()->routeIs('app.user'),
+                'permission' => 'View Users'
+            ],
+            [
+                'title' => __('Settings'),
+                'icon' => 'lucide-settings',
+                'active' => request()->routeIs('app.settings.*'),
+                'sub' => [
+                    [
+                        'title' => __('Permission Groups'),
+                        'route' => route('app.settings.permission-group'),
+                        'active' => request()->routeIs('app.settings.permission-group'),
+                        'permission' => 'View Permission Groups'
+                    ],
+                    [
+                        'title' => __('Permissions'),
+                        'route' => route('app.settings.permission'),
+                        'active' => request()->routeIs('app.settings.permission'),
+                        'permission' => 'View Permissions'
+                    ],
+                    [
+                        'title' => __('Roles'),
+                        'route' => route('app.settings.role'),
+                        'active' => request()->routeIs('app.settings.role'),
+                        'permission' => 'View Roles'
+                    ],
+                    [
+                        'title' => __('System Settings'),
+                        'route' => route('app.settings.system-setting'),
+                        'active' => request()->routeIs('app.settings.system-setting'),
+                        'permission' => 'View System Settings'
+                    ],
+                ],
+            ],
+        ],
+    ],
+];
+```
+
+**Menu Features:**
+- **Permission-based visibility** - Items only show if user has required permissions
+- **Active state detection** - Automatic highlighting of current page
+- **Hierarchical structure** - Support for nested submenus
+- **Icon integration** - Uses Lucide icons via blade-lucide-icons package
+- **Internationalization ready** - All text supports Laravel's translation system
 
 ## 📋 Requirements
 
@@ -41,7 +107,7 @@ Livecoat is a comprehensive starter template designed for backend developers who
 - Composer
 - Node.js & NPM
 - MySQL or PostgreSQL
-- Redis (recommended for caching)
+- Redis (Optional) (recommended for caching)
 
 ## 🛠️ Installation
 
@@ -77,8 +143,7 @@ Livecoat is a comprehensive starter template designed for backend developers who
 
 5. **Run migrations and seed**
    ```bash
-   php artisan migrate
-   php artisan db:seed
+   php artisan migrate --seed
    ```
 
 6. **Start the development server**
@@ -94,13 +159,6 @@ Livecoat is a comprehensive starter template designed for backend developers who
 
 ## ⚙️ Configuration
 
-### Customizing App Settings
-
-You can easily customize your application through the admin panel or by editing the configuration files:
-
-- **App Name,Logo, Other Settings**: Visit `/app/settings/system-setting`
-- **Theme Colors**: Modify `resources/css/app.css`
-
 ### Role & Permissions
 
 The starter kit comes with a pre-configured role system:
@@ -115,6 +173,7 @@ $role = Role::create(['name' => 'moderator']);
 
 // Assign permissions
 $role->givePermissionTo(['edit-posts', 'delete-comments']);
+
 ```
 
 ## 🎯 Usage Examples
@@ -129,53 +188,6 @@ This creates:
 - `app/Livewire/UserProfile.php`
 - `resources/views/livewire/user-profile.blade.php`
 
-### Using BasecoatUI Components
-
-```blade
-<x-basecoat::button variant="primary" size="lg">
-    Click me
-</x-basecoat::button>
-
-<x-basecoat::card>
-    <x-basecoat::card-header>
-        <h3>Card Title</h3>
-    </x-basecoat::card-header>
-    <x-basecoat::card-content>
-        <p>Card content goes here</p>
-    </x-basecoat::card-content>
-</x-basecoat::card>
-```
-
-### Adding Permissions to Routes
-
-```php
-// routes/web.php
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index']);
-});
-```
-
-## 📁 Project Structure
-
-```
-├── app/
-│   ├── Livewire/          # Livewire components
-│   ├── Models/            # Eloquent models
-│   ├── Http/Controllers/  # HTTP controllers
-│   └── Helpers/           # Helper functions
-├── resources/
-│   ├── views/
-│   │   ├── livewire/      # Livewire component views
-│   │   └── components/    # Blade components
-│   ├── css/               # Stylesheets
-│   └── js/                # JavaScript files
-├── database/
-│   ├── migrations/        # Database migrations
-│   ├── seeders/          # Database seeders
-│   └── factories/        # Model factories
-└── config/               # Configuration files
-```
-
 ## 🤝 Contributing
 
 We welcome contributions! Here's how you can help:
@@ -186,22 +198,11 @@ We welcome contributions! Here's how you can help:
 4. **Push to the branch** (`git push origin feature/amazing-feature`)
 5. **Open a Pull Request**
 
-### Contribution Guidelines
-
-- Follow PSR-12 coding standards
-- Write tests for new features
-- Update documentation as needed
-- Be respectful and constructive
-
 ## 📝 Roadmap
 
-- [ ] API authentication with Sanctum
+- [ ] Fully Reusable Basecoat Components
 - [ ] Multi-language support
-- [ ] Advanced audit logging
-- [ ] Email template system
-- [ ] File manager component
-- [ ] Advanced user analytics
-- [ ] WebSocket integration
+- [ ] Advanced logging
 
 ## 🙏 Acknowledgments
 
@@ -209,8 +210,9 @@ We welcome contributions! Here's how you can help:
 - **[Livewire](https://laravel-livewire.com)** - Dynamic interfaces without JavaScript
 - **[BasecoatUI](https://basecoatui.com)** - Beautiful UI components
 - **[Spatie](https://spatie.be)** - Excellent Laravel packages
-- **[pragmRX](https://github.com/Pragmarx)** - TOTP authentication library
+- **[Google2Fa](https://github.com/antonioribeiro/google2fa)** - TOTP authentication library
 - **[Filament](https://filamentphp.com)** - Elegant admin panels
+- **[Blade Lucide Icons](https://github.com/mallardduck/blade-lucide-icons)** - Lucide icon components for Blade
 
 ## 📄 License
 
@@ -229,4 +231,4 @@ If you find this starter kit helpful, please consider:
 
 **Made with ❤️ for the Laravel community**
 
-Built by backend developers, for backend developers. Stop wasting time on boilerplate and start building amazing applications today!
+Built by backend developers, for backend developers. Stop wasting time on boilerplate and start building amazing applications today.
