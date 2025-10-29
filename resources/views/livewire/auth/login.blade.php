@@ -1,56 +1,51 @@
 <div>
     <x-layouts.auth>
         <x-flash-messages />
-        <form wire:submit.prevent="login">
-            {{-- TOTP Authentication - To be implemented --}}
-            <div class="card w-full hidden">
-                <header>
-                    <h2>Two-Factor Authentication</h2>
-                    <p>Scan the QR code or enter the code manually</p>
-                </header>
-                <section>
-                    <div class="form grid gap-6">
-                        {{-- QR Code Section --}}
-                        <div class="flex justify-center p-6 bg-muted/30 rounded-lg border-2 border-dashed border-border">
-                            <div class="max-w-[200px] w-full">
-                                <img src="{{ asset('images/qrcode-example.svg') }}" alt="TOTP QR Code" class="w-full h-auto rounded-md shadow-sm">
+        <form wire:submit.prevent="{{ $requires2fa ? 'verify2fa' : 'login' }}">
+            @csrf
+            {{-- 2FA Verification --}}
+            @if($requires2fa)
+                <div class="card w-full">
+                    <header>
+                        <h2>{{ __('Two-Factor Authentication') }}</h2>
+                        <p>{{ __('Enter the code from your authenticator app') }}</p>
+                    </header>
+                    <section>
+                        <div class="form grid gap-6">
+                            {{-- Code Input Section --}}
+                            <div class="grid gap-3">
+                                <label for="totp-code" class="label font-semibold">{{ __('Enter 6-Digit Code') }}</label>
+                                <input 
+                                    class="input text-center text-lg font-mono tracking-widest" 
+                                    id="totp-code" 
+                                    type="text" 
+                                    wire:model="totpCode"
+                                    placeholder="000000"
+                                    maxlength="6"
+                                    pattern="[0-9]*"
+                                    inputmode="numeric"
+                                    autofocus
+                                >
+                                <p class="text-xs text-muted-foreground text-center">{{ __('Open your authenticator app to view your verification code') }}</p>
                             </div>
                         </div>
-                        
-                        {{-- Secret Key Section --}}
-                        <div class="bg-muted/50 rounded-lg p-4 border border-border">
-                            <p class="text-xs text-muted-foreground mb-2 uppercase tracking-wide">Secret Key</p>
-                            <code class="text-base font-mono font-semibold text-foreground select-all">1234-5678-91012</code>
-                        </div>
-                        
-                        {{-- Code Input Section --}}
-                        <div class="grid gap-3">
-                            <label for="totp-code" class="label font-semibold">Enter 4-Digit Code</label>
-                            <input 
-                                class="input text-center text-lg font-mono tracking-widest" 
-                                id="totp-code" 
-                                type="text" 
-                                placeholder="0000"
-                                maxlength="4"
-                                pattern="[0-9]*"
-                                inputmode="numeric"
-                            >
-                            <p class="text-xs text-muted-foreground text-center">Enter the code from your authenticator app</p>
-                        </div>
-                        
-                        {{-- Action Button --}}
-                        <button type="button" class="btn w-full">Verify Code</button>
-                    </div>
-                </section>
-            </div>
-            <div class="card w-full">
+                    </section>
+                    <footer class="flex flex-col items-center gap-2">
+                        <button type="submit" class="btn w-full">{{ __('Verify Code') }}</button>
+                        <button type="button" wire:click="cancelVerification" class="btn-ghost w-full">
+                            {{ __('Cancel') }}
+                        </button>
+                    </footer>
+                </div>
+            @else
+                {{-- Login Form --}}
+                <div class="card w-full">
                 <header>
                     <h2>Login to your account</h2>
                     <p>Enter your details below to login to your account</p>
                 </header>
                 <section>
                     <div class="form grid gap-6">
-                        @csrf
                         <div class="grid gap-2">
                             <label for="demo-card-form-email">Email</label>
                             <input type="email" id="demo-card-form-email" placeholder="Enter your email"
@@ -72,6 +67,16 @@
                                 <p class="text-destructive text-sm">{{ $errors->first('password') }}</p>
                             @enderror
                         </div>
+                        
+                        {{-- Google reCAPTCHA v2 --}}
+                        @if(setting('google_recaptcha_v2.enabled'))
+                            <div wire:ignore class="flex justify-center">
+                                <div wire:ignore class="g-recaptcha" 
+                                    data-sitekey="{{ setting('google_recaptcha_v2.site_key') }}"
+                                    data-callback="onRecaptchaSuccess">
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </section>
                 <footer class="flex flex-col items-center gap-2">
@@ -80,6 +85,26 @@
                             class="underline-offset-4 hover:underline">Sign up</a></p>
                 </footer>
             </div>
+            @endif
         </form>
     </x-layouts.auth>
+    
+    {{-- Google reCAPTCHA Script --}}
+    @if(setting('google_recaptcha_v2.enabled'))
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script>
+            function onRecaptchaSuccess(token) {
+                @this.set('recaptchaToken', token);
+            }
+            
+            // Listen for reset event from Livewire
+            document.addEventListener('livewire:initialized', () => {
+                Livewire.on('resetRecaptcha', () => {
+                    if (typeof grecaptcha !== 'undefined') {
+                        grecaptcha.reset();
+                    }
+                });
+            });
+        </script>
+    @endif
 </div>

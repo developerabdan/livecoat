@@ -78,6 +78,36 @@
                                 <p class="text-sm text-card-foreground mt-1">{{ Auth::user()->created_at->format('F d, Y') }}</p>
                             </div>
                         </div>
+
+                        <div class="flex items-center justify-between py-3">
+                            <div class="flex-1">
+                                <label class="text-xs font-medium text-muted-foreground uppercase tracking-wide">{{ __('Two-Factor Authentication') }}</label>
+                                <p class="text-sm text-card-foreground mt-1">
+                                    @if(Auth::user()->totp_secret)
+                                        <span class="inline-flex items-center gap-1 text-green-600 dark:text-green-400">
+                                            <x-lucide-shield-check class="w-4 h-4" />
+                                            {{ __('Enabled') }}
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 text-muted-foreground">
+                                            <x-lucide-shield-off class="w-4 h-4" />
+                                            {{ __('Disabled') }}
+                                        </span>
+                                    @endif
+                                </p>
+                            </div>
+                            <button 
+                                class="btn-ghost btn-sm gap-2" 
+                                @click="$dispatch('open-modal', { id: 'setup2fa' })">
+                                @if(Auth::user()->totp_secret)
+                                    <x-lucide-settings class="w-4 h-4" />
+                                    <span>{{ __('Manage') }}</span>
+                                @else
+                                    <x-lucide-shield-plus class="w-4 h-4" />
+                                    <span>{{ __('Enable') }}</span>
+                                @endif
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -100,5 +130,96 @@
             {{ $this->changeAvatarSchema }}
             <button type="submit" class="btn mt-5">Change Avatar</button>
         </form>
+    </x-filament::modal>
+
+    <!-- 2FA Setup Modal -->
+    <x-filament::modal id="setup2fa" width="2xl">
+        <x-slot name="heading">
+            {{ Auth::user()->totp_secret ? __('Manage Two-Factor Authentication') : __('Enable Two-Factor Authentication') }}
+        </x-slot>
+        
+        <div class="space-y-4">
+            @if(Auth::user()->totp_secret)
+                <!-- 2FA is already enabled -->
+                <div class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                    <div class="flex items-center gap-2 text-green-800 dark:text-green-200">
+                        <x-lucide-shield-check class="w-5 h-5" />
+                        <span class="font-medium">{{ __('Two-factor authentication is enabled') }}</span>
+                    </div>
+                    <p class="text-sm text-green-700 dark:text-green-300 mt-2">
+                        {{ __('Your account is protected with two-factor authentication.') }}
+                    </p>
+                </div>
+                
+                <div class="flex gap-2 justify-end">
+                    <button type="button" wire:click="disable2fa" class="btn-destructive">
+                        {{ __('Disable 2FA') }}
+                    </button>
+                </div>
+            @else
+                <!-- 2FA is not enabled yet -->
+                @if(!$qrCode)
+                    <!-- Show enable button -->
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                            <div class="flex items-start gap-2 text-blue-800 dark:text-blue-200">
+                                <x-lucide-info class="w-5 h-5 mt-0.5" />
+                                <div>
+                                    <p class="font-medium">{{ __('Enhance your account security') }}</p>
+                                    <p class="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                                        {{ __('Two-factor authentication adds an extra layer of security by requiring a code from your authenticator app in addition to your password.') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" wire:click="enable2fa" class="btn w-full">
+                            <x-lucide-shield-plus class="w-4 h-4" />
+                            {{ __('Enable 2FA') }}
+                        </button>
+                    </div>
+                @else
+                    <!-- Show QR code and verification -->
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <h3 class="font-semibold mb-2">{{ __('Scan QR Code') }}</h3>
+                            <p class="text-sm text-muted-foreground mb-4">
+                                {{ __('Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)') }}
+                            </p>
+                            <div class="flex justify-center mb-4">
+                                <img src="{{ $qrCode }}" alt="QR Code" class="w-64 h-64 border border-muted rounded-lg" />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="verificationCode" class="block text-sm font-medium mb-2">
+                                {{ __('Verification Code') }}
+                            </label>
+                            <input 
+                                type="text" 
+                                id="verificationCode"
+                                wire:model="verificationCode"
+                                placeholder="{{ __('Enter 6-digit code') }}"
+                                class="input w-full text-center text-lg tracking-widest"
+                                maxlength="6"
+                                pattern="[0-9]{6}"
+                            />
+                            <p class="text-xs text-muted-foreground mt-1">
+                                {{ __('Enter the 6-digit code from your authenticator app') }}
+                            </p>
+                        </div>
+                        
+                        <div class="flex gap-2 justify-end">
+                            <button type="button" wire:click="cancel2faSetup" class="btn-ghost">
+                                {{ __('Cancel') }}
+                            </button>
+                            <button type="button" wire:click="verify2fa" class="btn">
+                                {{ __('Verify & Enable') }}
+                            </button>
+                        </div>
+                    </div>
+                @endif
+            @endif
+        </div>
     </x-filament::modal>
 </x-layouts.main>

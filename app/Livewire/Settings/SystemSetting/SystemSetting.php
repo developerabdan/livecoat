@@ -25,6 +25,7 @@ class SystemSetting extends Component implements HasSchemas
     public ?array $dataAppName = [];
     public ?array $dataLoginLogo = [];
     public ?array $dataAppLogo = [];
+    public ?array $dataSetupGoogleRecaptcha = [];
     public function render()
     {
         return view('livewire.settings.system-setting.system-setting');
@@ -39,7 +40,7 @@ class SystemSetting extends Component implements HasSchemas
             'app_name' => setting('app_name.name')
         ]);
         $this->enableTotp->fill([
-            'enable_totp' => cccccccccccccccccc
+            'enable_totp' => setting('enable_totp.enabled')
         ]);
         $this->appIcon->fill([
             'app_icon' => setting('app_icon.path')
@@ -52,7 +53,17 @@ class SystemSetting extends Component implements HasSchemas
             'app_logo_light' => setting('app_logo.path_light'),
             'app_logo_dark' => setting('app_logo.path_dark')
         ]);
-        $this->enableGoogleRecaptcha->fill();
+        $this->enableGoogleRecaptcha->fill(
+            [
+                'enable_google_recaptcha' => setting('google_recaptcha_v2.enabled')
+            ]
+        );
+        $this->setupGoogleRecaptcha->fill(
+            [
+                'secret_key' => setting('google_recaptcha_v2.secret_key'),
+                'site_key' => setting('google_recaptcha_v2.site_key')
+            ]
+        );
     }
     public function enableTotp(Schema $schema): Schema
     {
@@ -69,6 +80,7 @@ class SystemSetting extends Component implements HasSchemas
                             ], [
                                 'value' => ['enabled' => $state]
                             ]);
+                        $this->doClearCache();
                         Notification::make()
                             ->title(__('Enable TOTP updated successfully'))
                             ->success()
@@ -168,6 +180,7 @@ class SystemSetting extends Component implements HasSchemas
                             ], [
                                 'value' => ['version' => $state]
                             ]);
+                        $this->doClearCache();
                         Notification::make()
                             ->title(__('App version updated successfully'))
                             ->success()
@@ -192,6 +205,7 @@ class SystemSetting extends Component implements HasSchemas
                             ], [
                                 'value' => ['name' => $state]
                             ]);
+                        $this->doClearCache();
                         Notification::make()
                             ->title(__('App name updated successfully'))
                             ->success()
@@ -212,6 +226,7 @@ class SystemSetting extends Component implements HasSchemas
                         'path' => $data['app_icon']
                     ]
                 ]);
+        $this->doClearCache();
         Notification::make()
             ->title(__('App icon updated successfully'))
             ->success()
@@ -230,15 +245,20 @@ class SystemSetting extends Component implements HasSchemas
                     'path_dark' => $data['login_logo_dark']
                 ]
             ]);
+        $this->doClearCache();
         Notification::make()
             ->title(__('Login logo updated successfully'))
             ->success()
             ->send();
         $this->dispatch('close-modal', id: 'login-logo-modal');
     }
-    public function clearCache()
+    private function doClearCache()
     {
         Cache::forget('settings');
+    }
+    public function clearCache()
+    {
+        $this->doClearCache();
         Notification::make()
             ->title(__('Cache cleared successfully'))
             ->success()
@@ -257,6 +277,7 @@ class SystemSetting extends Component implements HasSchemas
                     'path_dark' => $data['app_logo_dark']
                 ]
             ]);
+        $this->doClearCache();
         Notification::make()
             ->title(__('App logo updated successfully'))
             ->success()
@@ -269,8 +290,100 @@ class SystemSetting extends Component implements HasSchemas
             ->components([
                 Toggle::make('enable_google_recaptcha')
                     ->hiddenLabel()
+                    ->live()
+                    ->reactive()
+                    ->afterStateUpdated(function ($state) {
+                            $setting = Setting::query()->where('key', 'google_recaptcha_v2')->first();
+                            if ($setting) {
+                                $value = $setting->value;
+                                $value['enabled'] = $state;
+                                $setting->value = $value;
+                                $setting->save();
+                            } else {
+                                Setting::query()
+                                    ->updateOrCreate([
+                                        'key' => 'google_recaptcha_v2'
+                                    ], [
+                                        'value' => [
+                                            'enabled' => $state,
+                                            'secret_key' => '',
+                                            'site_key' => ''
+                                        ]
+                                    ]);
+                            }
+                        $this->doClearCache();
+                        Notification::make()
+                            ->title(__('Google Recaptcha v2 updated successfully'))
+                            ->success()
+                            ->send();
+                    })
                 // ...
             ])
             ->statePath('dataEnableGoogleRecaptcha');
+    }
+    public function setupGoogleRecaptcha(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextInput::make('secret_key')
+                        ->placeholder('type secret key')
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function ($state) {
+                            $setting = Setting::query()->where('key', 'google_recaptcha_v2')->first();
+                            if ($setting) {
+                                $value = $setting->value;
+                                $value['secret_key'] = $state;
+                                $setting->value = $value;
+                                $setting->save();
+                            } else {
+                                Setting::query()
+                                    ->updateOrCreate([
+                                        'key' => 'google_recaptcha_v2'
+                                    ], [
+                                        'value' => [
+                                            'enabled' => false,
+                                            'secret_key' => $state,
+                                            'site_key' => ''
+                                        ]
+                                    ]);
+                            }
+                            $this->doClearCache();
+                            Notification::make()
+                                ->title(__('Google Recaptcha secret key updated successfully'))
+                                ->success()
+                                ->send();
+                        })
+                        ->required(),
+                TextInput::make('site_key')
+                        ->placeholder('type site key')
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function ($state) {
+                            $setting = Setting::query()->where('key', 'google_recaptcha_v2')->first();
+                            if ($setting) {
+                                $value = $setting->value;
+                                $value['site_key'] = $state;
+                                $setting->value = $value;
+                                $setting->save();
+                            } else {
+                                Setting::query()
+                                    ->updateOrCreate([
+                                        'key' => 'google_recaptcha_v2'
+                                    ], [
+                                        'value' => [
+                                            'enabled' => false,
+                                            'secret_key' => '',
+                                            'site_key' => $state
+                                        ]
+                                    ]);
+                            }
+                            $this->doClearCache();
+                            Notification::make()
+                                ->title(__('Google Recaptcha site key updated successfully'))
+                                ->success()
+                                ->send();
+                        })
+                        ->required(),
+            ])
+            ->statePath('dataSetupGoogleRecaptcha');
     }
 }

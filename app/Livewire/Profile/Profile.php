@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Profile;
 
+use App\Services\Interfaces\Totp as TotpInterface;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -18,11 +19,22 @@ class Profile extends Component implements HasSchemas
 {
     use InteractsWithSchemas;
     public ?array $data = [];
+    public ?string $qrCode = null;
+    public ?string $tempSecret = null;
+    public ?string $verificationCode = null;
+    public bool $showRecoveryCodes = false;
+    
+    protected TotpInterface $totp;
 
     public function render()
     {
         return view('livewire.profile.profile');
     }
+    public function boot(TotpInterface $totp): void
+    {
+        $this->totp = $totp;
+    }
+    
     public function mount(): void
     {
         $this->changePasswordSchema->fill();
@@ -107,5 +119,107 @@ class Profile extends Component implements HasSchemas
             ->send();
         
         $this->dispatch('close-modal', id: 'changeAvatar');
+    }
+    
+    /**
+     * Enable 2FA - Generate QR code
+     */
+    public function enable2fa()
+    {
+        if (Auth::user()->totp_secret) {
+            Notification::make()
+                ->title(__('2FA is already enabled'))
+                ->warning()
+                ->send();
+            return;
+        }
+        
+        // Generate new secret
+        $this->tempSecret = $this->totp->generateSecret();
+        
+        // Generate QR code
+        $this->qrCode = $this->totp->getInlineQr(
+            Auth::user()->email,
+            $this->tempSecret,
+            config('app.name', 'MyApp')
+        );
+    }
+    
+    /**
+     * Verify and confirm 2FA setup
+     */
+    public function verify2fa()
+    {
+        if (!$this->verificationCode) {
+            Notification::make()
+                ->title(__('Please enter the verification code'))
+                ->warning()
+                ->send();
+            return;
+        }
+        
+        if (!$this->tempSecret) {
+            Notification::make()
+                ->title(__('Please enable 2FA first'))
+                ->warning()
+                ->send();
+            return;
+        }
+        
+        // Verify the code
+        if (!$this->totp->verifyCode($this->tempSecret, $this->verificationCode)) {
+            Notification::make()
+                ->title(__('Invalid verification code'))
+                ->danger()
+                ->send();
+            return;
+        }
+        
+        // Save the secret to user
+        Auth::user()->update([
+            'totp_secret' => $this->tempSecret
+        ]);
+        
+        Notification::make()
+            ->title(__('2FA enabled successfully'))
+            ->success()
+            ->send();
+        
+        // Reset state
+        $this->reset(['qrCode', 'tempSecret', 'verificationCode']);
+        $this->dispatch('close-modal', id: 'setup2fa');
+    }
+    
+    /**
+     * Disable 2FA
+     */
+    public function disable2fa()
+    {
+        if (!Auth::user()->totp_secret) {
+            Notification::make()
+                ->title(__('2FA is not enabled'))
+                ->warning()
+                ->send();
+            return;
+        }
+        
+        Auth::user()->update([
+            'totp_secret' => null
+        ]);
+        
+        Notification::make()
+            ->title(__('2FA disabled successfully'))
+            ->success()
+            ->send();
+        
+        $this->dispatch('close-modal', id: 'setup2fa');
+    }
+    
+    /**
+     * Cancel 2FA setup
+     */
+    public function cancel2faSetup()
+    {
+        $this->reset(['qrCode', 'tempSecret', 'verificationCode']);
     }
 }

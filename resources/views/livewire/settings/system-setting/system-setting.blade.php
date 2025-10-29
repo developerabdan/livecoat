@@ -100,14 +100,7 @@
                         </label>
                     </section>
                     <form action="" class="flex flex-col gap-4 form">
-                        <div class="grid gap-2">
-                            <label for="secret-key">Secret Key</label>
-                            <input type="text" id="secret-key" placeholder="type secret key">
-                        </div>
-                        <div class="grid gap-2">
-                            <label for="site-key">Site Key</label>
-                            <input type="text" id="site-key" placeholder="type site key">
-                        </div>
+                        {{ $this->setupGoogleRecaptcha }}
                     </form>
                 </div>
             </div>
