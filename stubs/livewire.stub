@@ -1,0 +1,15 @@
+<?php
+
+namespace [namespace];
+
+use Livewire\Component;
+use Livewire\Attributes\Title;
+
+#[Title('')]
+class [class] extends Component
+{
+    public function render()
+    {
+        return view('[view]');
+    }
+}
