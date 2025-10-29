@@ -203,6 +203,8 @@ We welcome contributions! Here's how you can help:
 - [ ] Fully Reusable Basecoat Components
 - [ ] Multi-language support
 - [ ] Advanced logging
+- [ ] Testing
+- [ ] Documentation
 
 ## 🙏 Acknowledgments
 
