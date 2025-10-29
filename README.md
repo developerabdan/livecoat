@@ -1,61 +1,232 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Livecoat Starter Kit
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Laravel](https://img.shields.io/badge/Laravel-12+-FF2D20.svg)](https://laravel.com)
+[![Livewire](https://img.shields.io/badge/Livewire-3+-FB70A5.svg)](https://laravel-livewire.com)
+[![BasecoatUI](https://img.shields.io/badge/BasecoatUI-Modern-6366F1.svg)](https://basecoatui.com)
 
-## About Laravel
+⚡ **A powerful Laravel starter kit combining Livewire with BasecoatUI.com for rapid application development**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Livecoat is a comprehensive starter template designed for backend developers who want to kickstart their Laravel applications with modern UI components and essential features built-in. No more wasting time on repetitive setup tasks - focus on building your unique features from day one.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🔐 Authentication & Security
+- **TOTP Authenticator** - Built-in two-factor authentication using pragmRX
+- **Google reCAPTCHA v2** - Protect your forms from bots
+- **Role-based Permissions** - Integrated Spatie role and permissions system
+- **Secure session management** - Laravel's robust authentication system
 
-## Learning Laravel
+### 🎨 User Interface & Experience
+- **BasecoatUI Components** - Beautiful, modern UI components (shadcn-inspired)
+- **Dark/Light Mode** - Built-in theme switching with system preference detection
+- **Responsive Design** - Mobile-first approach with Tailwind CSS
+- **Filament 4 Support** - Component-based integration
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### ⚙️ Developer Experience
+- **Customizable App Settings** - Easily change app name, version, icon, and logo
+- **Livewire 3+** - Reactive UI components without writing JavaScript
+- **Laravel 12+** - Latest Laravel features and best practices
+- **Component Architecture** - Reusable, maintainable code structure
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🛠️ Built-in Tools
+- **User Management** - Complete user CRUD operations
+- **Role Management** - Flexible role and permission system
+- **Profile Management** - User profile editing with avatar support
+- **Settings Panel** - Application configuration interface
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📋 Requirements
 
-## Laravel Sponsors
+- PHP 8.2+
+- Composer
+- Node.js & NPM
+- MySQL or PostgreSQL
+- Redis (recommended for caching)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🛠️ Installation
 
-### Premium Partners
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/developerabdan/livecoat.git
+   cd livecoat
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Install dependencies**
+   ```bash
+   composer install
+   npm install
+   npm run build
+   ```
 
-## Contributing
+3. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Configure your database**
+   ```bash
+   # Edit .env file with your database credentials
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=your_database
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
 
-## Code of Conduct
+5. **Run migrations and seed**
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. **Start the development server**
+   ```bash
+   php artisan serve
+   npm run dev
+   ```
 
-## Security Vulnerabilities
+7. **Visit your application**
+   ```
+   http://localhost:8000
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## ⚙️ Configuration
 
-## License
+### Customizing App Settings
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+You can easily customize your application through the admin panel or by editing the configuration files:
+
+- **App Name,Logo, Other Settings**: Visit `/app/settings/system-setting`
+- **Theme Colors**: Modify `resources/css/app.css`
+
+### Role & Permissions
+
+The starter kit comes with a pre-configured role system:
+
+- **Super Admin**: Full system access
+
+Add custom roles and permissions through the admin panel or programmatically:
+
+```php
+// Create a new role
+$role = Role::create(['name' => 'moderator']);
+
+// Assign permissions
+$role->givePermissionTo(['edit-posts', 'delete-comments']);
+```
+
+## 🎯 Usage Examples
+
+### Creating a New Livewire Component
+
+```bash
+php artisan make:livewire UserProfile
+```
+
+This creates:
+- `app/Livewire/UserProfile.php`
+- `resources/views/livewire/user-profile.blade.php`
+
+### Using BasecoatUI Components
+
+```blade
+<x-basecoat::button variant="primary" size="lg">
+    Click me
+</x-basecoat::button>
+
+<x-basecoat::card>
+    <x-basecoat::card-header>
+        <h3>Card Title</h3>
+    </x-basecoat::card-header>
+    <x-basecoat::card-content>
+        <p>Card content goes here</p>
+    </x-basecoat::card-content>
+</x-basecoat::card>
+```
+
+### Adding Permissions to Routes
+
+```php
+// routes/web.php
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index']);
+});
+```
+
+## 📁 Project Structure
+
+```
+├── app/
+│   ├── Livewire/          # Livewire components
+│   ├── Models/            # Eloquent models
+│   ├── Http/Controllers/  # HTTP controllers
+│   └── Helpers/           # Helper functions
+├── resources/
+│   ├── views/
+│   │   ├── livewire/      # Livewire component views
+│   │   └── components/    # Blade components
+│   ├── css/               # Stylesheets
+│   └── js/                # JavaScript files
+├── database/
+│   ├── migrations/        # Database migrations
+│   ├── seeders/          # Database seeders
+│   └── factories/        # Model factories
+└── config/               # Configuration files
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+4. **Push to the branch** (`git push origin feature/amazing-feature`)
+5. **Open a Pull Request**
+
+### Contribution Guidelines
+
+- Follow PSR-12 coding standards
+- Write tests for new features
+- Update documentation as needed
+- Be respectful and constructive
+
+## 📝 Roadmap
+
+- [ ] API authentication with Sanctum
+- [ ] Multi-language support
+- [ ] Advanced audit logging
+- [ ] Email template system
+- [ ] File manager component
+- [ ] Advanced user analytics
+- [ ] WebSocket integration
+
+## 🙏 Acknowledgments
+
+- **[Laravel](https://laravel.com)** - The PHP framework for web artisans
+- **[Livewire](https://laravel-livewire.com)** - Dynamic interfaces without JavaScript
+- **[BasecoatUI](https://basecoatui.com)** - Beautiful UI components
+- **[Spatie](https://spatie.be)** - Excellent Laravel packages
+- **[pragmRX](https://github.com/Pragmarx)** - TOTP authentication library
+- **[Filament](https://filamentphp.com)** - Elegant admin panels
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## ⭐ Show Your Support
+
+If you find this starter kit helpful, please consider:
+
+- **⭐ Starring this repository** - It helps more developers discover it
+- **🐛 Reporting issues** - Help us improve by reporting bugs
+- **💡 Suggesting features** - Share your ideas for improvements
+- **📢 Sharing with others** - Spread the word about Livecoat
+
+---
+
+**Made with ❤️ for the Laravel community**
+
+Built by backend developers, for backend developers. Stop wasting time on boilerplate and start building amazing applications today!
