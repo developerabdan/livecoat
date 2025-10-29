@@ -17,40 +17,31 @@ class SettingSeeder extends Seeder
         $settings = [
             [
                 'key'  => 'app_name',
-                'value' => json_encode([
-                    'name' => 'Livecoat',
-                ]),
+                'value' => []
             ],
             [
                 'key' => 'app_icon',
-                'value' => json_encode([
-                    'path' => '/public/assets/img/favicon.png',
-                ])
+                'value' => []
             ],
             [
                 'key' => 'app_logo',
-                'value' => json_encode([
-                    'path' => '/public/logo-square.png',
-                ])
+                'value' => []
             ],
             [
                 'key' => 'login_logo',
-                'value' => json_encode([
-                    'path' => '/public/logo.png',
-                ])
+                'value' => []
             ],
             [
                 'key' => 'app_version',
-                'value' => json_encode([
-                    'version' => '1.0.0',
-                ])
+                'value' => []
+            ],
+            [
+                'key' => 'app_name',
+                'value' => []
             ],
             [
                 'key' => 'google_recaptcha_v2',
-                'value' => json_encode([
-                    'site_key' => '',
-                    'secret_key' => '',
-                ])
+                'value' => []
             ],
         ];
         foreach ($settings as $setting) {

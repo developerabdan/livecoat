@@ -6,8 +6,10 @@
 
             <a href="/" class="btn-ghost p-2 h-12 w-full justify-start">
                 <div class=" flex aspect-square size-8 items-center justify-center rounded-lg">
-                    <img src="{{ setting('app_logo.path') ? asset('storage/' . setting('app_logo.path')) : asset('logo-base.png') }}"
-                        alt="Logo">
+                    <img src="{{ setting('app_logo.path_light') ? asset('storage/' . setting('app_logo.path_light')) : asset('logo-base.png') }}"
+                        alt="Logo" class="block dark:hidden">
+                    <img src="{{ setting('app_logo.path_dark') ? asset('storage/' . setting('app_logo.path_dark')) : asset('logo-base.png') }}"
+                        alt="Logo" class="hidden dark:block">
                 </div>
                 <div class="grid flex-1 text-left text-sm leading-tight">
                     <span class="truncate font-medium">{{ setting('app_name.name') ?? config('app.name') }}</span>
@@ -19,7 +21,6 @@
             @foreach ($menu as $groupIndex => $group)
                 <div role="group" aria-labelledby="group-label-content-{{ $groupIndex }}">
                     <h3 id="group-label-content-{{ $groupIndex }}">{{ $group['group'] }}</h3>
-
                     <ul>
                         @foreach ($group['items'] as $itemIndex => $item)
                             @if (!isset($item['permission']) || auth()->user()->can($item['permission']))

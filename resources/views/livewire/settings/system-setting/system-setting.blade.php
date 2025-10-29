@@ -15,7 +15,7 @@
                                     {{ __('Clear the application cache to ensure that your changes take effect.') }}
                                 </div>
                             </div>
-                            <button class="btn-secondary"
+                            <button class="btn-destructive"
                                 @click="$dispatch('open-modal', { id: 'clear-cache-modal'})">{{ __('Clear') }}</button>
                         </label>
                     </section>
@@ -24,6 +24,22 @@
             <div class="card">
                 <div class="p-4">
                     <section class="text-sm grid gap-6">
+                        <label class="flex items-center justify-between gap-2">
+                            <div class="flex flex-col gap-0.5">
+                                <div class="font-medium">{{ __('App Version') }}</div>
+                                <div class="text-muted-foreground">
+                                    {{ __('Configure your app version.') }}</div>
+                            </div>
+                            {{ $this->appVersion }}
+                        </label>
+                        <label class="flex items-center justify-between gap-2">
+                            <div class="flex flex-col gap-0.5">
+                                <div class="font-medium">{{ __('App Name') }}</div>
+                                <div class="text-muted-foreground">
+                                    {{ __('Configure your app name.') }}</div>
+                            </div>
+                            {{ $this->appName }}
+                        </label>
                         <label class="flex items-center justify-between gap-2">
                             <div class="flex flex-col gap-0.5">
                                 <div class="font-medium">{{ __('App Icon') }}</div>
@@ -41,6 +57,15 @@
                             </div>
                             <button class="btn-secondary"
                                 @click="$dispatch('open-modal', { id: 'app-logo-modal'})">{{ __('Manage') }}</button>
+                        </label>
+                        <label class="flex items-center justify-between gap-2">
+                            <div class="flex flex-col gap-0.5">
+                                <div class="font-medium">{{ __('Login Logo') }}</div>
+                                <div class="text-muted-foreground">
+                                    {{ __('Configure the image asset used as your login page logo.') }}</div>
+                            </div>
+                            <button class="btn-secondary"
+                                @click="$dispatch('open-modal', { id: 'login-logo-modal'})">{{ __('Manage') }}</button>
                         </label>
                     </section>
                 </div>
@@ -66,7 +91,7 @@
                     <section class="text-sm grid gap-6">
                         <label class="flex items-center justify-between gap-2">
                             <div class="flex flex-col gap-0.5">
-                                <div class="font-medium">{{ __('Enable Google Recaptcha') }}</div>
+                                <div class="font-medium">{{ __('Enable Google Recaptcha v2') }}</div>
                                 <div class="text-muted-foreground">
                                     {{ __('Enable Google reCAPTCHA to verify human interaction and prevent automated submissions.') }}
                                 </div>
@@ -103,6 +128,15 @@
         </x-slot>
         <form wire:submit.prevent="updateAppLogo">
             {{ $this->appLogo }}
+            <button type="submit" class="btn mt-5">{{ __('Upload') }}</button>
+        </form>
+    </x-filament::modal>
+    <x-filament::modal id="login-logo-modal">
+        <x-slot name="heading">
+            {{ __('Manage Login Logo') }}
+        </x-slot>
+        <form wire:submit.prevent="updateLoginLogo">
+            {{ $this->loginLogo }}
             <button type="submit" class="btn mt-5">{{ __('Upload') }}</button>
         </form>
     </x-filament::modal>
