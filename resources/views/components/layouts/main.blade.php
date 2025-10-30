@@ -1,3 +1,7 @@
+@props([
+    'header' => null,
+    'subHeader' => null,
+])
 <div>
     @php
         $menu = [
@@ -56,6 +60,8 @@
     <x-partials.aside :menu="$menu" />
     <main>
         <x-partials.header />
-        {{ $slot }}
+        <div class="p-4 md:p-6 xl:p-12">
+            {{ $slot }}
+        </div>
     </main>
 </div>
