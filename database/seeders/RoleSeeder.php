@@ -140,5 +140,25 @@ class RoleSeeder extends Seeder
                 'guard_name' => 'web',
             ],
         ]);
+        $systemSettings = PermissionGroup::query()
+                    ->create([
+                        'category' => 'System Settings',
+                        'name' => 'System Settings',
+                        'slug' => 'system-settings',
+                        'icon' => 'lucide-settings',
+                        'description' => 'Manage all system settings',
+                    ]);
+        $systemSettings->permissions()->createMany([
+            [
+                'name' => 'View System Settings',
+                'description' => 'View available system settings',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'Apply System Settings',
+                'description' => 'Apply system settings',
+                'guard_name' => 'web',
+            ],
+        ]);
     }
 }

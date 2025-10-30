@@ -9,7 +9,7 @@
                         'icon' => 'lucide-home',
                         'route' => route('app.dashboard'),
                         'active' => request()->routeIs('app.dashboard'),
-                        'permission' => 'View Dashboard'
+                        'permission' => null
                     ],
                     [
                         'title' => __('User Access'),

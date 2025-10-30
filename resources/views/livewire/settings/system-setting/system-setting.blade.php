@@ -15,7 +15,7 @@
                                     {{ __('Clear the application cache to ensure that your changes take effect.') }}
                                 </div>
                             </div>
-                            <button class="btn-destructive"
+                            <button class="btn-destructive" @disabled(auth()->user()->cannot('Apply System Settings'))
                                 @click="$dispatch('open-modal', { id: 'clear-cache-modal'})">{{ __('Clear') }}</button>
                         </label>
                     </section>
@@ -46,7 +46,7 @@
                                 <div class="text-muted-foreground">
                                     {{ __('Upload the image that will be used as your app’s icon.”') }}</div>
                             </div>
-                            <button class="btn-secondary"
+                            <button class="btn-secondary" @disabled(auth()->user()->cannot('Apply System Settings'))
                                 @click="$dispatch('open-modal', { id: 'app-icon-modal'})">{{ __('Manage') }}</button>
                         </label>
                         <label class="flex items-center justify-between gap-2">
@@ -55,7 +55,7 @@
                                 <div class="text-muted-foreground">
                                     {{ __('Configure the image asset used as your app’s primary logo.') }}</div>
                             </div>
-                            <button class="btn-secondary"
+                            <button class="btn-secondary" @disabled(auth()->user()->cannot('Apply System Settings'))
                                 @click="$dispatch('open-modal', { id: 'app-logo-modal'})">{{ __('Manage') }}</button>
                         </label>
                         <label class="flex items-center justify-between gap-2">
@@ -64,7 +64,7 @@
                                 <div class="text-muted-foreground">
                                     {{ __('Configure the image asset used as your login page logo.') }}</div>
                             </div>
-                            <button class="btn-secondary"
+                            <button class="btn-secondary" @disabled(auth()->user()->cannot('Apply System Settings'))
                                 @click="$dispatch('open-modal', { id: 'login-logo-modal'})">{{ __('Manage') }}</button>
                         </label>
                     </section>

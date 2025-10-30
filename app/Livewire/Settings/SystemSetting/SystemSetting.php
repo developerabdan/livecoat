@@ -10,6 +10,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -70,10 +71,12 @@ class SystemSetting extends Component implements HasSchemas
         return $schema
             ->components([
                 Toggle::make('enable_totp')
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->hiddenLabel()
                     ->live()
                     ->reactive()
                     ->afterStateUpdated(function ($state) {
+                        $this->authorize('Apply System Settings');
                         Setting::query()
                             ->updateOrCreate([
                                 'key' => 'enable_totp'
@@ -94,6 +97,7 @@ class SystemSetting extends Component implements HasSchemas
         return $schema
             ->components([
                 FileUpload::make('app_icon')
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->hiddenLabel()
                     ->image()
                     ->imageEditor()
@@ -111,6 +115,7 @@ class SystemSetting extends Component implements HasSchemas
         return $schema
             ->components([
                 FileUpload::make('login_logo_light')
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->label('Light')
                     ->image()
                     ->imageEditor()
@@ -122,6 +127,7 @@ class SystemSetting extends Component implements HasSchemas
                     ->required(),
                 
                 FileUpload::make('login_logo_dark')
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->label('Dark')
                     ->image()
                     ->imageEditor()
@@ -141,6 +147,7 @@ class SystemSetting extends Component implements HasSchemas
         return $schema
             ->components([
                 FileUpload::make('app_logo_light')
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->label('Light')
                     ->image()
                     ->imageEditor()
@@ -151,8 +158,8 @@ class SystemSetting extends Component implements HasSchemas
                     ->imageCropAspectRatio('1:1')
                     ->required(),
                 FileUpload::make('app_logo_dark')
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->label('Dark')
-                    ->image()
                     ->imageEditor()
                     ->directory('systems')
                     ->disk('public')
@@ -169,11 +176,13 @@ class SystemSetting extends Component implements HasSchemas
         return $schema
             ->components([
                 TextInput::make('app_version')
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->placeholder('eg: 1.0.0')
                     ->required()
                     ->extraInputAttributes(['class' => 'w-20 text-center'])
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (string $state) {
+                        $this->authorize('Apply System Settings');
                         Setting::query()
                             ->updateOrCreate([
                                 'key' => 'app_version'
@@ -195,10 +204,12 @@ class SystemSetting extends Component implements HasSchemas
         return $schema
             ->components([
                 TextInput::make('app_name')
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->placeholder('eg: Livecoat')
                     ->required()    
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (string $state) {
+                        $this->authorize('Apply System Settings');
                         Setting::query()
                             ->updateOrCreate([
                                 'key' => 'app_name'
@@ -217,6 +228,7 @@ class SystemSetting extends Component implements HasSchemas
     }
     public function updateAppIcon()
     {
+        $this->authorize('Apply System Settings');
         $data = $this->appIcon->getState();
         Setting::query()
                 ->updateOrCreate([
@@ -235,6 +247,7 @@ class SystemSetting extends Component implements HasSchemas
     }
     public function updateLoginLogo()
     {
+        $this->authorize('Apply System Settings');
         $data = $this->loginLogo->getState();
         Setting::query()
             ->updateOrCreate([
@@ -267,6 +280,7 @@ class SystemSetting extends Component implements HasSchemas
     }
     public function updateAppLogo()
     {
+        $this->authorize('Apply System Settings');
         $data = $this->appLogo->getState();
         Setting::query()
             ->updateOrCreate([
@@ -291,14 +305,16 @@ class SystemSetting extends Component implements HasSchemas
                 Toggle::make('enable_google_recaptcha')
                     ->hiddenLabel()
                     ->live()
+                    ->disabled(Auth::user()->cannot('Apply System Settings'))
                     ->reactive()
                     ->afterStateUpdated(function ($state) {
-                            $setting = Setting::query()->where('key', 'google_recaptcha_v2')->first();
-                            if ($setting) {
-                                $value = $setting->value;
-                                $value['enabled'] = $state;
-                                $setting->value = $value;
-                                $setting->save();
+                        $this->authorize('Apply System Settings');
+                        $setting = Setting::query()->where('key', 'google_recaptcha_v2')->first();
+                        if ($setting) {
+                            $value = $setting->value;
+                            $value['enabled'] = $state;
+                            $setting->value = $value;
+                            $setting->save();
                             } else {
                                 Setting::query()
                                     ->updateOrCreate([
@@ -326,9 +342,11 @@ class SystemSetting extends Component implements HasSchemas
         return $schema
             ->components([
                 TextInput::make('secret_key')
+                        ->disabled(Auth::user()->cannot('Apply System Settings'))
                         ->placeholder('type secret key')
                         ->live(onBlur: true)
                         ->afterStateUpdated(function ($state) {
+                            $this->authorize('Apply System Settings');
                             $setting = Setting::query()->where('key', 'google_recaptcha_v2')->first();
                             if ($setting) {
                                 $value = $setting->value;
@@ -355,9 +373,11 @@ class SystemSetting extends Component implements HasSchemas
                         })
                         ->required(),
                 TextInput::make('site_key')
+                        ->disabled(Auth::user()->cannot('Apply System Settings'))
                         ->placeholder('type site key')
                         ->live(onBlur: true)
                         ->afterStateUpdated(function ($state) {
+                            $this->authorize('Apply System Settings');
                             $setting = Setting::query()->where('key', 'google_recaptcha_v2')->first();
                             if ($setting) {
                                 $value = $setting->value;
