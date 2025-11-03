@@ -61,6 +61,7 @@
     <main>
         <x-partials.header />
         <div class="p-4 md:p-6 xl:p-12">
+            <x-flash-messages />
             {{ $slot }}
         </div>
     </main>

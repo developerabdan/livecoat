@@ -37,10 +37,22 @@
                 <p>some basecoat component from basecoat</p>
             </x-slot>
             <x-basecoat.accordion>
+                <x-basecoat.accordion.item title="why are you gae?">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat eaque aliquam laboriosam quibusdam maxime optio alias facilis enim soluta ex, cumque vel veritatis reiciendis, fuga corporis tempore odio atque deleniti?</p>
+                </x-basecoat.accordion.item>
                 <x-basecoat.accordion.item title="are you gae?">
-                    <p>test</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat eaque aliquam laboriosam quibusdam maxime optio alias facilis enim soluta ex, cumque vel veritatis reiciendis, fuga corporis tempore odio atque deleniti?</p>
+                </x-basecoat.accordion.item>
+                <x-basecoat.accordion.item title="u sue?">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat eaque aliquam laboriosam quibusdam maxime optio alias facilis enim soluta ex, cumque vel veritatis reiciendis, fuga corporis tempore odio atque deleniti?</p>
                 </x-basecoat.accordion.item>
             </x-basecoat.accordion>
+        </x-basecoat.card>
+        <x-basecoat.card header="Alert">
+            <x-alert type="success" :title="session('success_title', __('Success!'))" :message="session('success', __('This is example of alert success'))" />
+            <x-alert type="error" :title="session('error_title', __('Error!'))" :message="session('error', __('This is example of alert error'))" />
+            <x-alert type="warning" :title="session('warning_title', __('Warning!'))" :message="session('warning', __('This is example of alert warning'))" />
+            <x-alert type="info" :title="session('info_title', __('Info!'))" :message="session('info', __('This is example of alert info'))" />
         </x-basecoat.card>
     </div>
 </x-layouts.main>
