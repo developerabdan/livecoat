@@ -1,8 +1,58 @@
 <x-layouts.main>
-    <div class="p-4 md:p-6 xl:p-12">
-        <header class="space-y-2">
-            <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl xl:text-4xl">Dashboard</h1>
-            <p class="text-muted-foreground text-[1.05rem] sm:text-base">Welcome to your dashboard.</p>
-        </header>
+    <x-basecoat.page-header>
+        <x-slot name="header">
+            Dashboard
+        </x-slot>
+        <x-slot name="subHeader">
+            Welcome to your dashboard
+        </x-slot>
+    </x-basecoat.page-header>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <x-basecoat.card header="Meeting Notes">
+            <x-slot name="subHeader">
+                <p>Transcript from the meeting with the client.</p>
+            </x-slot>
+            <section class="text-sm">
+                <p>Client requested dashboard redesign with focus on mobile responsiveness.</p>
+                <ol class="mt-4 flex list-decimal flex-col gap-2 pl-6">
+                    <li>New analytics widgets for daily/weekly metrics</li>
+                    <li>Simplified navigation menu</li>
+                    <li>Dark mode support</li>
+                    <li>Timeline: 6 weeks</li>
+                    <li>Follow-up meeting scheduled for next Tuesday</li>
+                </ol>
+            </section>
+            <x-slot name="footer">
+                <div
+                    class="flex -space-x-2 [&_img]:ring-card [&_img]:ring-2 [&_img]:grayscale [&_img]:size-8 [&_img]:shrink-0 [&_img]:object-cover [&_img]:rounded-full">
+                    <img alt="@developerabdan" src="https://avatars.githubusercontent.com/u/42459820?s=40&v=4">
+                    <img alt="@hunvreus" src="https://github.com/hunvreus.png">
+                    <img alt="@shadcn" src="https://github.com/shadcn.png">
+                    <img alt="@adamwathan" src="https://github.com/adamwathan.png">
+                </div>
+            </x-slot>
+        </x-basecoat.card>
+        <x-basecoat.card header="Accordion">
+            <x-slot name="subHeader">
+                <p>some basecoat component from basecoat</p>
+            </x-slot>
+            <x-basecoat.accordion>
+                <x-basecoat.accordion.item title="why are you gae?">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat eaque aliquam laboriosam quibusdam maxime optio alias facilis enim soluta ex, cumque vel veritatis reiciendis, fuga corporis tempore odio atque deleniti?</p>
+                </x-basecoat.accordion.item>
+                <x-basecoat.accordion.item title="are you gae?">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat eaque aliquam laboriosam quibusdam maxime optio alias facilis enim soluta ex, cumque vel veritatis reiciendis, fuga corporis tempore odio atque deleniti?</p>
+                </x-basecoat.accordion.item>
+                <x-basecoat.accordion.item title="u sue?">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat eaque aliquam laboriosam quibusdam maxime optio alias facilis enim soluta ex, cumque vel veritatis reiciendis, fuga corporis tempore odio atque deleniti?</p>
+                </x-basecoat.accordion.item>
+            </x-basecoat.accordion>
+        </x-basecoat.card>
+        <x-basecoat.card header="Alert">
+            <x-alert type="success" :title="session('success_title', __('Success!'))" :message="session('success', __('This is example of alert success'))" />
+            <x-alert type="error" :title="session('error_title', __('Error!'))" :message="session('error', __('This is example of alert error'))" />
+            <x-alert type="warning" :title="session('warning_title', __('Warning!'))" :message="session('warning', __('This is example of alert warning'))" />
+            <x-alert type="info" :title="session('info_title', __('Info!'))" :message="session('info', __('This is example of alert info'))" />
+        </x-basecoat.card>
     </div>
 </x-layouts.main>
